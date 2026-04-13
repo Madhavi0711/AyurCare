@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Content - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .pc-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      background: linear-gradient(135deg, rgba(30,18,8,0.88) 0%, rgba(58,38,20,0.75) 100%),
+                  url('/images/ayur-bg.avif') center/cover no-repeat;
+      border-radius: 16px;
+      padding: 44px 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .pc-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c8a96e;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .pc-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: #f5ead8 !important;
+      font-family: Georgia, serif;
+      margin: 0 0 14px !important;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .pc-subtitle {
+      font-size: 0.97rem;
+      color: rgba(245,234,216,0.8) !important;
+      line-height: 1.75;
+      max-width: 480px;
+      margin: 0 !important;
+    }
+    .pc-header-text { position: relative; z-index: 1; }
+    .pc-lock-badge {
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      background: rgba(200,169,110,0.15);
+      border: 2px solid rgba(200,169,110,0.4);
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+    }
+    @media (max-width: 640px) {
+      .pc-page-header { flex-direction: column; padding: 28px 20px; text-align: center; }
+      .pc-subtitle { max-width: 100%; }
+      .pc-lock-badge { width: 72px; height: 72px; font-size: 2rem; }
+    }
+  </style>
+  <script src="../js/client-init.js"></script>
+</head>
+<body>
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link active">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link active">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+  <main class="sp-content">
+    <!-- Page header -->
+    <div class="pc-page-header">
+      <div class="pc-header-text">
+        <p class="pc-eyebrow">Platinum Members Only</p>
+        <h2 class="pc-title">Premium Wellness Content</h2>
+        <p class="pc-subtitle">Exclusive Ayurvedic knowledge, expert guidance, and personalised resources for Platinum members.</p>
+      </div>
+      <div class="pc-lock-badge" id="pc-lock-badge">&#11088;</div>
+    </div>
+
+    <!-- Upgrade banner for free users -->
+    <div id="upgrade-banner" style="display:none;">
+      <div style="background:linear-gradient(135deg,#5a3e28,#7a5438);border-radius:14px;padding:32px;color:#fdf6ec;margin-bottom:32px;">
+        <h2 style="font-family:Georgia,serif;font-size:1.5rem;margin-bottom:8px;color:#fdf6ec;">Unlock Premium Wellness</h2>
+        <p style="color:rgba(253,246,236,0.8);margin-bottom:24px;font-size:0.97rem;">Get access to exclusive Ayurvedic content, personalised diet plans, expert video consultations, and in-depth wellness guides.</p>
+        <button class="btn-primary" id="show-plans-btn" style="background:#c8a96e;color:#3b2a1a;font-weight:700;padding:12px 32px;">View Premium Plans</button>
+      </div>
+
+      <!-- Plans grid — loaded from admin -->
+      <div id="plans-section" style="display:none;">
+        <h3 style="font-family:Georgia,serif;color:var(--color-brown);margin-bottom:20px;">Choose Your Plan</h3>
+        <p id="plans-loading-msg" class="loading">Loading plans...</p>
+        <div id="membership-plans-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-bottom:24px;"></div>
+        <p id="no-plans-msg" style="display:none;color:#7a6a55;font-style:italic;">No plans available at the moment. Please contact us.</p>
+      </div>
+    </div>
+
+    <!-- Content area for paid users -->
+    <div id="content-area" style="display:none;">
+      <div class="filter-bar">
+        <button class="filter-btn active" data-type="">All</button>
+        <button class="filter-btn" data-type="video">Videos</button>
+        <button class="filter-btn" data-type="notes">Notes</button>
+        <button class="filter-btn" data-type="diet">Diet Plans</button>
+      </div>
+      <div id="content-grid" class="content-grid"></div>
+      <p id="no-content" style="display:none;color:#7a6a55;font-style:italic;padding:24px 0;">No content available yet.</p>
+    </div>
+
+    <p id="loading" class="loading">Loading...</p>
+    <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+  </main>
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // Drawer
+    var drawer = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer() { drawer.classList.add('open'); overlay.classList.add('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    // Logout
+    function doLogout() { fetch('/api/logout',{method:'POST'}).finally(function(){ window.location.href='/index.html'; }); }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+    // Load user name
+    fetch('/api/client/dashboard',{credentials:'include'}).then(function(r){return r.ok?r.json():null;}).then(function(d){if(d&&document.getElementById('nav-user-name'))document.getElementById('nav-user-name').textContent=d.name;}).catch(function(){});
+
+    var loadingEl = document.getElementById('loading');
+    var statusMsg = document.getElementById('status-msg');
+    var contentArea = document.getElementById('content-area');
+    var upgradeBanner = document.getElementById('upgrade-banner');
+    var premiumHeader = document.getElementById('premium-header');
+    var contentGrid = document.getElementById('content-grid');
+    var noContent = document.getElementById('no-content');
+
+    function showMsg(msg, type) {
+      statusMsg.textContent = msg;
+      statusMsg.className = 'status-msg ' + (type || 'info');
+      statusMsg.style.display = 'block';
+    }
+
+    function escHtml(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    var typeLabels = { video: '?? Video', notes: '?? Notes', diet: '?? Diet Plan' };
+
+    function renderContent(items) {
+      contentGrid.innerHTML = '';
+      if (!items.length) { noContent.style.display = 'block'; return; }
+      noContent.style.display = 'none';
+      items.forEach(function(item) {
+        var card = document.createElement('div');
+        card.className = 'content-card';
+        card.innerHTML =
+          '<div class="img-placeholder" style="height:120px;margin-bottom:12px;">' + (typeLabels[item.type] || item.type) + '</div>' +
+          '<div class="content-type-badge">' + escHtml(item.type) + '</div>' +
+          '<h3 class="content-title">' + escHtml(item.title) + '</h3>' +
+          (item.description ? '<p class="content-desc">' + escHtml(item.description) + '</p>' : '') +
+          '<a href="' + escHtml(item.file_url) + '" target="_blank" rel="noopener" class="btn-primary btn-sm">Open</a>';
+        contentGrid.appendChild(card);
+      });
+    }
+
+    function loadContent(type) {
+      var url = type ? '/api/content?type=' + encodeURIComponent(type) : '/api/content';
+      fetch(url, { credentials: 'include' })
+        .then(function(res) {
+          if (res.status === 403) {
+            return res.json().then(function(data) {
+              if (data.error === 'upgrade_required') {
+                loadingEl.style.display = 'none';
+                upgradeBanner.style.display = 'block';
+                // Update upgrade banner text for platinum
+                var h2 = upgradeBanner.querySelector('h2');
+                var p = upgradeBanner.querySelector('p');
+                if (h2) h2.textContent = 'Platinum Plan Required';
+                if (p) p.textContent = 'Premium content is exclusively available to Platinum members. Upgrade now to unlock expert videos, wellness guides, and personalised resources.';
+              }
+            });
+          }
+          if (!res.ok) { showMsg('Failed to load content.', 'error'); return; }
+          return res.json().then(function(data) {
+            loadingEl.style.display = 'none';
+            premiumHeader.style.display = 'block';
+            contentArea.style.display = 'block';
+            renderContent(data);
+          });
+        })
+        .catch(function() { showMsg('Network error.', 'error'); });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        loadContent(btn.dataset.type);
+      });
+    });
+
+    // Show plans button
+    document.getElementById('show-plans-btn').addEventListener('click', function() {
+      var plansSection = document.getElementById('plans-section');
+      plansSection.style.display = 'block';
+      this.style.display = 'none';
+      loadMembershipPlans();
+    });
+
+    function loadMembershipPlans() {
+      var grid = document.getElementById('membership-plans-grid');
+      var loadingMsg = document.getElementById('plans-loading-msg');
+      var noPlansMsg = document.getElementById('no-plans-msg');
+
+      fetch('/api/membership-plans')
+        .then(function(r) { return r.ok ? r.json() : []; })
+        .then(function(plans) {
+          loadingMsg.style.display = 'none';
+          if (!plans.length) { noPlansMsg.style.display = 'block'; return; }
+          grid.innerHTML = '';
+          plans.forEach(function(plan) {
+            var features = Array.isArray(plan.features) ? plan.features : (typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : []);
+            var card = document.createElement('div');
+            card.className = 'available-plan-card' + (plan.price > 0 ? ' featured' : '');
+            card.innerHTML =
+              '<h3 style="color:#5a3e28;font-family:Georgia,serif;margin-bottom:4px;">' + escHtml(plan.name) + '</h3>' +
+              '<div class="plan-price">?' + parseFloat(plan.price).toLocaleString('en-IN') +
+                (plan.duration ? '<span style="font-size:0.9rem;font-weight:400;color:#7a6a55;">/' + escHtml(plan.duration) + '</span>' : '') +
+              '</div>' +
+              (plan.description ? '<p style="font-size:0.88rem;color:#7a6a55;margin-bottom:12px;">' + escHtml(plan.description) + '</p>' : '') +
+              (features.length ? '<ul class="plan-features">' + features.map(function(f) { return '<li>' + escHtml(f) + '</li>'; }).join('') + '</ul>' : '') +
+              (plan.price > 0 ? '<button class="btn-primary upgrade-to-plan-btn" style="width:100%;margin-top:12px;" data-plan="' + escHtml(plan.name) + '">Get ' + escHtml(plan.name) + '</button>' : '');
+            grid.appendChild(card);
+          });
+
+          // Wire upgrade buttons
+          grid.querySelectorAll('.upgrade-to-plan-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              btn.disabled = true;
+              btn.textContent = 'Processing…';
+              fetch('/api/upgrade', { method: 'POST', credentials: 'include' })
+                .then(function(r) {
+                  if (r.ok) {
+                    upgradeBanner.style.display = 'none';
+                    loadingEl.style.display = 'block';
+                    loadContent('');
+                  } else {
+                    showMsg('Upgrade failed. Please try again.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Get ' + btn.dataset.plan;
+                  }
+                })
+                .catch(function() {
+                  showMsg('Network error.', 'error');
+                  btn.disabled = false;
+                  btn.textContent = 'Get ' + btn.dataset.plan;
+                });
+            });
+          });
+        })
+        .catch(function() { loadingMsg.style.display = 'none'; noPlansMsg.style.display = 'block'; });
+    }
+
+    loadContent('');
+  </script>
+</body>
+</html>

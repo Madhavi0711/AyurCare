@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoga Plans &amp; Sessions - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .yp-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      background: linear-gradient(135deg, #1a1030 0%, #2a1a4a 55%, #3a2060 100%);
+      border-radius: 16px;
+      padding: 44px 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+    .yp-page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 75% 50%, rgba(180,140,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .yp-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b89eee;
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .yp-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: #f0ecff !important;
+      font-family: Georgia, serif;
+      margin: 0 0 14px !important;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .yp-subtitle {
+      font-size: 0.97rem;
+      color: rgba(240,236,255,0.75) !important;
+      line-height: 1.75;
+      max-width: 420px;
+      margin: 0 !important;
+    }
+    .yp-header-text { position: relative; z-index: 1; }
+    .yp-image-wrap {
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .yp-image-wrap img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(184,158,238,0.5);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: block;
+      background: #2a1a4a;
+    }
+    .yp-image-wrap img:hover {
+      transform: scale(1.07);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+    }
+    @media (max-width: 640px) {
+      .yp-page-header { flex-direction: column; padding: 28px 20px; text-align: center; }
+      .yp-subtitle { max-width: 100%; }
+      .yp-image-wrap img { width: 90px; height: 90px; }
+    }
+  </style>
+  <link rel="stylesheet" href="../css/wellness.css" />
+  <script src="../js/client-init.js"></script>
+</head>
+<body>
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link active">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link active">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+
+  <main class="sp-content">
+    <div class="yp-page-header">
+      <div class="yp-header-text">
+        <p class="yp-eyebrow">Ayurvedic Yoga Therapy</p>
+        <h2 class="yp-title">Yoga Plans &amp; Sessions</h2>
+        <p class="yp-subtitle">Explore curated Ayurvedic yoga therapy programmes and browse available sessions.</p>
+      </div>
+      <div class="yp-image-wrap">
+        <img src="/images/yogapose.png" alt="Yoga Plans" onerror="this.style.background='#2a1a4a'" />
+      </div>
+    </div>
+
+    <!-- -- Yoga Therapy Plans --------------------------------------- -->
+    <section style="margin-bottom:48px;">
+      <h3 style="font-size:1.2rem;color:var(--color-brown);margin-bottom:6px;font-family:Georgia,serif;">Yoga Therapy Plans</h3>
+      <p style="font-size:0.9rem;color:#7a6a55;margin-bottom:24px;">Personalised yoga routines for mind and body balance.</p>
+
+          <!-- Tier gate: shown for free users -->
+    <div id="yoga-upgrade-banner" style="display:none;background:linear-gradient(135deg,#1a1030,#2a1a4a);border-radius:14px;padding:32px;color:#f0ecff;margin-bottom:24px;">
+      <h3 style="font-family:Georgia,serif;font-size:1.4rem;margin-bottom:8px;color:#f0ecff;">Gold Plan Required</h3>
+      <p style="color:rgba(240,236,255,0.8);margin-bottom:20px;font-size:0.95rem;">Yoga plans and sessions are available to Gold and Platinum members. Upgrade to unlock your personalised Ayurvedic yoga programme.</p>
+      <a href="/dashboards/plans.html" class="btn-primary" style="background:#b89eee;color:#1a1030;font-weight:700;padding:12px 28px;text-decoration:none;border-radius:6px;display:inline-block;">Upgrade to Gold</a>
+    </div>
+<p id="plans-loading" class="loading">Loading plans...</p>
+      <p id="plans-status" class="status-msg" style="display:none;" role="alert"></p>
+      <div id="plans-grid" class="plans-grid" style="display:none;"></div>
+      <p id="no-plans" style="display:none;color:#7a6a55;font-style:italic;padding:16px 0;">No yoga plans available yet.</p>
+    </section>
+
+    <!-- -- Yoga Sessions -------------------------------------------- -->
+    <section>
+      <h3 style="font-size:1.2rem;color:var(--color-brown);margin-bottom:6px;font-family:Georgia,serif;">Yoga Sessions</h3>
+      <p style="font-size:0.9rem;color:#7a6a55;margin-bottom:20px;">Browse and filter individual yoga sessions available in your programme.</p>
+
+      <div class="filter-bar" style="margin-bottom:20px;">
+        <label for="category-filter" style="font-size:0.88rem;color:#7a6a55;margin-right:10px;">Filter by category:</label>
+        <select id="category-filter" style="min-width:180px;">
+          <option value="">All categories</option>
+        </select>
+      </div>
+
+      <p id="sessions-loading" class="loading" aria-live="polite">Loading sessions...</p>
+      <p id="sessions-status" class="status-msg" style="display:none;" role="alert"></p>
+      <div id="sessions-container"></div>
+
+      <section id="assigned-section" style="display:none;margin-top:32px;">
+        <h4 style="margin-bottom:1rem;color:var(--color-brown);font-family:Georgia,serif;">Your Assigned Sessions</h4>
+        <div id="assignments-container"></div>
+      </section>
+    </section>
+
+  </main>
+
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // -- Drawer ------------------------------------------------------
+    var drawer  = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer()  { drawer.classList.add('open');    overlay.classList.add('active');    document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    // Logout
+    function doLogout() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+    // Load user name
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { if (d) document.getElementById('nav-user-name').textContent = d.name; })
+      .catch(function() {});
+
+    // -- Load Yoga Plans ---------------------------------------------
+    var plansLoading = document.getElementById('plans-loading');
+    var plansGrid    = document.getElementById('plans-grid');
+    var noPlans      = document.getElementById('no-plans');
+    var plansStatus  = document.getElementById('plans-status');
+
+    function escHtml(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    fetch('/api/yoga-plans')
+      .then(function(r) { if (!r.ok) throw new Error('Failed'); return r.json(); })
+      .then(function(plans) {
+        plansLoading.style.display = 'none';
+        if (!plans.length) { noPlans.style.display = 'block'; return; }
+        plansGrid.style.display = 'grid';
+        plans.forEach(function(plan) {
+          var card = document.createElement('div');
+          card.className = 'plan-card';
+          card.innerHTML =
+            '<div class="img-placeholder" style="height:140px;margin-bottom:14px;">' + escHtml(plan.course_name) + '</div>' +
+            '<div class="plan-card-header">' +
+              '<h3 class="plan-name">' + escHtml(plan.course_name) + '</h3>' +
+              (plan.cost > 0
+                ? '<span class="status-badge active">Rs.' + parseFloat(plan.cost).toLocaleString('en-IN') + '</span>'
+                : '<span class="status-badge active">Free</span>') +
+            '</div>' +
+            (plan.description ? '<p class="plan-meta">' + escHtml(plan.description) + '</p>' : '') +
+            '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;">' +
+              (plan.duration ? '<span class="plan-meta">&#9200; ' + escHtml(plan.duration) + '</span>' : '') +
+              (plan.target_audience ? '<span class="plan-meta">&#128101; ' + escHtml(plan.target_audience) + '</span>' : '') +
+            '</div>' +
+            (plan.includes ? '<p class="plan-meta" style="margin-top:8px;"><strong>Includes:</strong> ' + escHtml(plan.includes) + '</p>' : '');
+          plansGrid.appendChild(card);
+        });
+      })
+      .catch(function() {
+        plansLoading.style.display = 'none';
+        plansStatus.textContent = 'Failed to load yoga plans.';
+        plansStatus.className = 'status-msg error';
+        plansStatus.style.display = 'block';
+      });
+
+    // -- Load Yoga Sessions ------------------------------------------
+    var sessionsLoading = document.getElementById('sessions-loading');
+    var sessionsStatus  = document.getElementById('sessions-status');
+    var sessionsContainer = document.getElementById('sessions-container');
+    var categoryFilter  = document.getElementById('category-filter');
+    var allSessions = [];
+
+    function renderSessions(sessions) {
+      if (!sessions.length) {
+        sessionsContainer.innerHTML = '<p style="color:#7a6a55;font-style:italic;padding:16px 0;">No sessions found.</p>';
+        return;
+      }
+      var grid = document.createElement('div');
+      grid.className = 'session-grid';
+      sessions.forEach(function(s) {
+        var card = document.createElement('div');
+        card.className = 'session-card';
+        card.innerHTML =
+          '<span class="session-category">' + escHtml(s.category || 'General') + '</span>' +
+          '<h4>' + escHtml(s.title) + '</h4>' +
+          (s.description ? '<p>' + escHtml(s.description) + '</p>' : '') +
+          (s.therapist_name ? '<p style="font-size:0.82rem;color:#7a6a55;">&#128100; ' + escHtml(s.therapist_name) + '</p>' : '') +
+          (s.video_link ? '<a href="' + escHtml(s.video_link) + '" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--color-light-brown);">Watch Video</a>' : '');
+        grid.appendChild(card);
+      });
+      sessionsContainer.innerHTML = '';
+      sessionsContainer.appendChild(grid);
+    }
+
+    fetch('/api/yoga/sessions', { credentials: 'include' })
+      .then(function(r) { if (!r.ok) throw new Error('Failed'); return r.json(); })
+      .then(function(data) {
+        sessionsLoading.style.display = 'none';
+        var sessions = data.sessions || [];
+        allSessions = sessions;
+
+        // Populate category filter
+        var cats = sessions.map(function(s) { return s.category; }).filter(Boolean);
+        cats = cats.filter(function(v, i, a) { return a.indexOf(v) === i; });
+        cats.forEach(function(cat) {
+          var opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat;
+          categoryFilter.appendChild(opt);
+        });
+
+        renderSessions(sessions);
+
+        // Load assigned sessions
+        fetch('/api/yoga/assignments', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : { assignments: [] }; })
+          .then(function(result) {
+            var assigned = result.assignments || [];
+            if (assigned.length) {
+              var sec = document.getElementById('assigned-section');
+              var cont = document.getElementById('assignments-container');
+              sec.style.display = 'block';
+              var grid = document.createElement('div');
+              grid.className = 'session-grid';
+              assigned.forEach(function(a) {
+                var card = document.createElement('div');
+                card.className = 'session-card';
+                card.innerHTML =
+                  '<span class="session-category">' + escHtml(a.category || 'Assigned') + '</span>' +
+                  '<h4>' + escHtml(a.title) + '</h4>' +
+                  (a.video_link ? '<a href="' + escHtml(a.video_link) + '" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--color-light-brown);">Watch Video</a>' : '') +
+                  (a.progress_notes ? '<p style="font-size:0.82rem;color:#7a6a55;">' + escHtml(a.progress_notes) + '</p>' : '');
+                grid.appendChild(card);
+              });
+              cont.appendChild(grid);
+            }
+          })
+          .catch(function() {});
+      })
+      .catch(function() {
+        sessionsLoading.style.display = 'none';
+        sessionsStatus.textContent = 'Failed to load sessions.';
+        sessionsStatus.className = 'status-msg error';
+        sessionsStatus.style.display = 'block';
+      });
+
+    categoryFilter.addEventListener('change', function() {
+      var val = categoryFilter.value;
+      var filtered = val ? allSessions.filter(function(s) { return s.category === val; }) : allSessions;
+      renderSessions(filtered);
+    });
+
+    // Tier gate: check membership_tier
+    fetch("/api/client/dashboard", { credentials: "include" })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) {
+        if (!d) return;
+        var tier = d.membership_tier || "free";
+        var banner = document.getElementById("yoga-upgrade-banner");
+        var plansLoading = document.getElementById("plans-loading");
+        var sessionsLoading = document.getElementById("sessions-loading");
+        if (tier === "free") {
+          if (banner) banner.style.display = "block";
+          if (plansLoading) plansLoading.style.display = "none";
+          if (sessionsLoading) sessionsLoading.style.display = "none";
+        }
+      }).catch(function() {});
+  </script>
+</body>
+</html>

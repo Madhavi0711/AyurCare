@@ -1,0 +1,374 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Content — AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">📊</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">👥</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">🌿</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">🥗</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">🧘</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link active"><span class="nav-link-icon">⭐</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">💳</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:24px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Premium Content</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Upload and manage premium wellness content</p>
+      </div>
+
+      <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+
+      <!-- Upload Form -->
+      <div class="admin-form-card">
+        <h3>Add New Content</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="f-title" placeholder="e.g. Vata Balancing Yoga Video" />
+          </div>
+          <div class="form-group">
+            <label>Type *</label>
+            <select id="f-type">
+              <option value="video">Video</option>
+              <option value="notes">Notes</option>
+              <option value="diet">Diet Plan</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>File / Video URL</label>
+          <input type="url" id="f-url" placeholder="https://youtube.com/... or direct file URL" />
+          <span style="font-size:0.8rem;color:#7a6a55;margin-top:4px;display:block;">Paste a YouTube, Google Drive, or direct file link.</span>
+        </div>
+        <div class="form-group">
+          <label>Or Upload a File</label>
+          <input type="file" id="f-file" accept="video/*,.pdf,.doc,.docx,.txt"
+                 style="padding:8px;background:#fdf6ec;border:1px dashed #c8a96e;border-radius:6px;width:100%;cursor:pointer;" />
+          <span style="font-size:0.8rem;color:#7a6a55;margin-top:4px;display:block;">Supported: MP4, PDF, DOC, TXT. Max 50MB. File will be stored as a local reference.</span>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="f-desc" rows="2" placeholder="Brief description of this content..."></textarea>
+        </div>
+        <button class="btn-primary" id="add-content-btn">Publish Content</button>
+      </div>
+
+      <!-- Content List Table -->
+      <div class="section-card">
+        <h3>Published Content</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="content-tbody">
+              <tr><td colspan="5" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Membership Plans Management ─────────────────────────── -->
+      <div class="admin-form-card" style="margin-top:32px;">
+        <h3>Membership Plans <span style="font-size:0.82rem;font-weight:400;color:#7a6a55;">(shown to users on Upgrade page)</span></h3>
+        <p style="font-size:0.88rem;color:#7a6a55;margin-bottom:20px;">Create plans with prices and benefits. Users will see these when they click "Upgrade to Premium".</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Plan Name *</label>
+            <input type="text" id="mp-name" placeholder="e.g. Premium Monthly" />
+          </div>
+          <div class="form-group">
+            <label>Price (₹) *</label>
+            <input type="number" id="mp-price" min="0" step="1" placeholder="e.g. 999" />
+          </div>
+          <div class="form-group">
+            <label>Duration</label>
+            <select id="mp-duration">
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+              <option value="lifetime">Lifetime</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" id="mp-desc" placeholder="e.g. Full access to all premium content and yoga plans" />
+        </div>
+        <div class="form-group">
+          <label>Features (one per line)</label>
+          <textarea id="mp-features" rows="4" placeholder="Exclusive premium content&#10;Personalised yoga plans&#10;Expert video consultations&#10;Priority support"></textarea>
+          <span style="font-size:0.78rem;color:#7a6a55;margin-top:4px;display:block;">Each line becomes a bullet point on the plan card.</span>
+        </div>
+        <button class="btn-primary" id="save-plan-btn">Save Plan</button>
+        <button class="btn-secondary" id="clear-plan-btn" style="margin-left:10px;">Clear</button>
+        <p id="plan-status-msg" class="status-msg" style="display:none;margin-top:12px;"></p>
+      </div>
+
+      <div class="section-card" style="margin-top:20px;">
+        <h3>Active Membership Plans</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Name</th><th>Price</th><th>Duration</th><th>Features</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="mp-tbody">
+              <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() {
+      sidebar.classList.add('open');
+      if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    });
+    document.getElementById('sidebar-close').addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('status-msg');
+      el.textContent = msg; el.className = 'status-msg ' + (type || 'info'); el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    var typeIcon = { video: '🎬', notes: '📄', diet: '🥗' };
+
+    function loadContent() {
+      fetch('/api/content', { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) throw new Error('Failed');
+          return r.json();
+        })
+        .then(function(items) {
+          if (!items) return;
+          var tbody = document.getElementById('content-tbody');
+          if (!items.length) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No content yet.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = items.map(function(c, i) {
+            return '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td><a href="' + c.file_url + '" target="_blank" rel="noopener" style="color:var(--color-light-brown);">' + c.title + '</a></td>' +
+              '<td>' + (typeIcon[c.type] || '') + ' ' + c.type + '</td>' +
+              '<td>' + (c.created_at ? new Date(c.created_at).toLocaleDateString() : '—') + '</td>' +
+              '<td><button class="btn-sm btn-primary delete-btn" data-id="' + c.id + '" style="background:#c0392b;">Delete</button></td>' +
+              '</tr>';
+          }).join('');
+
+          tbody.querySelectorAll('.delete-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              if (!confirm('Delete this content?')) return;
+              btn.disabled = true;
+              fetch('/api/content/' + btn.dataset.id, { method: 'DELETE', credentials: 'include' })
+                .then(function(r) {
+                  if (r.ok) { showMsg('Deleted', 'success'); loadContent(); }
+                  else { showMsg('Failed to delete', 'error'); btn.disabled = false; }
+                })
+                .catch(function() { showMsg('Network error', 'error'); btn.disabled = false; });
+            });
+          });
+        })
+        .catch(function() {
+          document.getElementById('content-tbody').innerHTML = '<tr><td colspan="5" class="empty-state">Failed to load. Please refresh.</td></tr>';
+        });
+    }
+
+    document.getElementById('add-content-btn').addEventListener('click', function() {
+      var title = document.getElementById('f-title').value.trim();
+      var url   = document.getElementById('f-url').value.trim();
+      var file  = document.getElementById('f-file').files[0];
+
+      if (!title) { showMsg('Title is required', 'error'); return; }
+
+      // If file selected, use its name as the URL reference (local file name)
+      var finalUrl = url;
+      if (!finalUrl && file) {
+        finalUrl = 'uploads/' + file.name;
+      }
+      if (!finalUrl) { showMsg('Please provide a URL or select a file', 'error'); return; }
+
+      var btn = document.getElementById('add-content-btn');
+      btn.disabled = true;
+      btn.textContent = 'Publishing…';
+      fetch('/api/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          title: title,
+          type: document.getElementById('f-type').value,
+          file_url: finalUrl,
+          description: document.getElementById('f-desc').value.trim(),
+        })
+      })
+        .then(function(r) {
+          if (r.ok) {
+            showMsg('Content published successfully', 'success');
+            ['f-title', 'f-url', 'f-desc'].forEach(function(id) { document.getElementById(id).value = ''; });
+            document.getElementById('f-file').value = '';
+            loadContent();
+          } else {
+            return r.json().then(function(d) { showMsg(d.error || 'Failed to publish', 'error'); });
+          }
+        })
+        .catch(function() { showMsg('Network error', 'error'); })
+        .finally(function() { btn.disabled = false; btn.textContent = 'Publish Content'; });
+    });
+
+    loadContent();
+
+    // ── Membership Plans ────────────────────────────────────────────
+    function showPlanMsg(msg, type) {
+      var el = document.getElementById('plan-status-msg');
+      el.textContent = msg; el.className = 'status-msg ' + (type || 'info'); el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    function loadMembershipPlans() {
+      fetch('/api/membership-plans', { credentials: 'include' })
+        .then(function(r) { return r.ok ? r.json() : []; })
+        .then(function(plans) {
+          var tbody = document.getElementById('mp-tbody');
+          if (!plans.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No plans yet.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = plans.map(function(p, i) {
+            var features = Array.isArray(p.features) ? p.features : (typeof p.features === 'string' ? JSON.parse(p.features || '[]') : []);
+            return '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td><strong>' + p.name + '</strong></td>' +
+              '<td>₹' + parseFloat(p.price).toLocaleString('en-IN') + '</td>' +
+              '<td>' + p.duration + '</td>' +
+              '<td style="font-size:0.8rem;color:#7a6a55;">' + features.slice(0, 3).join(', ') + (features.length > 3 ? '…' : '') + '</td>' +
+              '<td style="display:flex;gap:6px;">' +
+                '<button class="btn-sm btn-outline mp-delete-btn" data-id="' + p.id + '" style="background:#c0392b;color:#fff;border-color:#c0392b;">Delete</button>' +
+              '</td>' +
+              '</tr>';
+          }).join('');
+
+          tbody.querySelectorAll('.mp-delete-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              if (!confirm('Delete this plan?')) return;
+              btn.disabled = true;
+              fetch('/api/membership-plans/' + btn.dataset.id, { method: 'DELETE', credentials: 'include' })
+                .then(function(r) {
+                  if (r.ok) { showPlanMsg('Plan deleted', 'success'); loadMembershipPlans(); }
+                  else { showPlanMsg('Failed to delete', 'error'); btn.disabled = false; }
+                })
+                .catch(function() { showPlanMsg('Network error', 'error'); btn.disabled = false; });
+            });
+          });
+        })
+        .catch(function() {
+          document.getElementById('mp-tbody').innerHTML = '<tr><td colspan="6" class="empty-state">Failed to load.</td></tr>';
+        });
+    }
+
+    document.getElementById('save-plan-btn').addEventListener('click', function() {
+      var name = document.getElementById('mp-name').value.trim();
+      var price = document.getElementById('mp-price').value;
+      if (!name) { showPlanMsg('Plan name is required', 'error'); return; }
+      if (price === '' || isNaN(parseFloat(price))) { showPlanMsg('Valid price is required', 'error'); return; }
+
+      var featuresRaw = document.getElementById('mp-features').value.trim();
+      var features = featuresRaw ? featuresRaw.split('\n').map(function(f) { return f.trim(); }).filter(Boolean) : [];
+
+      var btn = document.getElementById('save-plan-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
+
+      fetch('/api/membership-plans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: name,
+          price: parseFloat(price),
+          duration: document.getElementById('mp-duration').value,
+          description: document.getElementById('mp-desc').value.trim(),
+          features: features
+        })
+      })
+        .then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, d: d }; });
+        })
+        .then(function(res) {
+          if (res.ok) {
+            showPlanMsg('Plan saved successfully', 'success');
+            document.getElementById('clear-plan-btn').click();
+            loadMembershipPlans();
+          } else {
+            showPlanMsg(res.d.error || 'Failed to save', 'error');
+          }
+        })
+        .catch(function() { showPlanMsg('Network error', 'error'); })
+        .finally(function() { btn.disabled = false; btn.textContent = 'Save Plan'; });
+    });
+
+    document.getElementById('clear-plan-btn').addEventListener('click', function() {
+      ['mp-name', 'mp-price', 'mp-desc', 'mp-features'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('mp-duration').value = 'monthly';
+    });
+
+    loadMembershipPlans();
+  </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Management - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">&#128202;</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link active"><span class="nav-link-icon">&#128101;</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">&#127807;</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">&#129367;</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">&#129496;</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">&#11088;</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">&#128200;</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:20px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Client Management</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">View and manage all registered clients. Toggle membership and view detailed profiles.</p>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px;">
+        <div class="search-bar" style="flex:1;min-width:220px;margin-bottom:0;">
+          <input type="text" id="search-input" placeholder="Search by name or email..." />
+          <button class="btn-primary" id="search-btn">Search</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-secondary filter-tab active" data-filter="all">All Users</button>
+          <button class="btn-secondary filter-tab" data-filter="paid">Paid Users</button>
+          <button class="btn-secondary filter-tab" data-filter="free">Free Users</button>
+        </div>
+      </div>
+
+      <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Membership</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody">
+            <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="client-detail-panel" style="display:none;margin-top:28px;" class="section-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin:0;">Client Profile</h3>
+          <button class="btn-secondary" id="close-detail-btn" style="padding:6px 16px;font-size:0.85rem;">Close</button>
+        </div>
+        <div id="client-detail-content"><p class="loading">Loading profile...</p></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() { sidebar.classList.add('open'); if (sidebarOverlay) sidebarOverlay.classList.add('active'); });
+    document.getElementById('sidebar-close').addEventListener('click', function() { sidebar.classList.remove('open'); if (sidebarOverlay) sidebarOverlay.classList.remove('active'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('status-msg');
+      el.textContent = msg; el.className = 'status-msg ' + (type || 'info'); el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    var allClients = [];
+    var currentFilter = 'all';
+
+    function membershipBadge(type) {
+      return type === 'paid'
+        ? '<span class="badge badge-approved">Paid</span>'
+        : '<span class="badge badge-pending">Free</span>';
+    }
+
+    function renderClients(clients) {
+      var tbody = document.getElementById('clients-tbody');
+      if (!clients.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No clients found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = clients.map(function(c, i) {
+        var toggleLabel = c.membership_type === 'paid' ? 'Set Free' : 'Set Paid';
+        var toggleClass = c.membership_type === 'paid' ? 'btn-secondary' : 'btn-primary';
+        return '<tr>' +
+          '<td>' + (i + 1) + '</td>' +
+          '<td>' + (c.name || '-') + '</td>' +
+          '<td>' + (c.email || '-') + '</td>' +
+          '<td>' + membershipBadge(c.membership_type) + '</td>' +
+          '<td>' + (c.created_at ? new Date(c.created_at).toLocaleDateString() : '-') + '</td>' +
+          '<td style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button class="btn-sm btn-outline view-btn" data-id="' + c.id + '">View Profile</button>' +
+            '<button class="btn-sm ' + toggleClass + ' toggle-btn" data-id="' + c.id + '" data-current="' + c.membership_type + '">' + toggleLabel + '</button>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.querySelectorAll('.view-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { loadClientDetail(btn.dataset.id); });
+      });
+
+      tbody.querySelectorAll('.toggle-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var newType = btn.dataset.current === 'paid' ? 'free' : 'paid';
+          btn.disabled = true;
+          fetch('/api/admin/clients/' + btn.dataset.id + '/membership', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ membership_type: newType })
+          })
+            .then(function(r) {
+              if (r.ok) { showMsg('Membership updated to ' + newType, 'success'); loadClients(); }
+              else { showMsg('Failed to update membership', 'error'); btn.disabled = false; }
+            })
+            .catch(function() { showMsg('Network error', 'error'); btn.disabled = false; });
+        });
+      });
+    }
+
+    function applyFilter() {
+      var filtered = allClients;
+      if (currentFilter === 'paid') filtered = allClients.filter(function(c) { return c.membership_type === 'paid'; });
+      if (currentFilter === 'free') filtered = allClients.filter(function(c) { return c.membership_type !== 'paid'; });
+      renderClients(filtered);
+    }
+
+    function loadClients(q) {
+      var url = q ? '/api/admin/clients/search?q=' + encodeURIComponent(q) : '/api/admin/clients';
+      fetch(url, { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) throw new Error('Failed');
+          return r.json();
+        })
+        .then(function(rows) {
+          if (!rows) return;
+          allClients = rows;
+          applyFilter();
+        })
+        .catch(function() {
+          document.getElementById('clients-tbody').innerHTML = '<tr><td colspan="6" class="empty-state">Failed to load. Please refresh.</td></tr>';
+        });
+    }
+
+    function loadClientDetail(id) {
+      var panel = document.getElementById('client-detail-panel');
+      var content = document.getElementById('client-detail-content');
+      panel.style.display = 'block';
+      content.innerHTML = '<p class="loading">Loading profile...</p>';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      fetch('/api/admin/clients/' + id, { credentials: 'include' })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+          if (!data) { content.innerHTML = '<p class="empty-state">Could not load profile.</p>'; return; }
+          var u = data.user;
+          var prakriti = data.prakritiResults && data.prakritiResults[0];
+          var diet = data.dietRecommendations && data.dietRecommendations[0];
+          var yoga = data.yogaAssignments || [];
+          content.innerHTML =
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">' +
+              '<div>' +
+                '<h4 style="color:var(--color-light-brown);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Personal Info</h4>' +
+                '<p><strong>Name:</strong> ' + (u.name || '-') + '</p>' +
+                '<p><strong>Email:</strong> ' + (u.email || '-') + '</p>' +
+                '<p><strong>Membership:</strong> ' + membershipBadge(u.membership_type) + '</p>' +
+                '<p><strong>Joined:</strong> ' + (u.created_at ? new Date(u.created_at).toLocaleDateString() : '-') + '</p>' +
+              '</div>' +
+              '<div>' +
+                '<h4 style="color:var(--color-light-brown);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Prakriti Result</h4>' +
+                (prakriti
+                  ? '<p><strong>Dominant:</strong> <span class="badge badge-' + prakriti.dominant_type + '">' + prakriti.dominant_type + '</span></p>' +
+                    '<p><strong>Scores:</strong> Vata ' + prakriti.vata_score + ' | Pitta ' + prakriti.pitta_score + ' | Kapha ' + prakriti.kapha_score + '</p>' +
+                    '<p><strong>Status:</strong> <span class="badge badge-' + (prakriti.status === 'approved' ? 'approved' : 'pending') + '">' + prakriti.status + '</span></p>'
+                  : '<p style="color:#888;font-style:italic;">No assessment taken yet.</p>') +
+              '</div>' +
+            '</div>' +
+            '<hr style="border:none;border-top:1px solid #e8d5a3;margin:20px 0;" />' +
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">' +
+              '<div>' +
+                '<h4 style="color:var(--color-light-brown);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Diet Plan</h4>' +
+                (diet
+                  ? '<p><strong>Prakriti:</strong> ' + (diet.prakriti_type || '-') + '</p>' +
+                    '<p><strong>Recommended:</strong> ' + (diet.recommended_foods ? diet.recommended_foods.substring(0, 100) + '...' : '-') + '</p>'
+                  : '<p style="color:#888;font-style:italic;">No diet plan assigned.</p>') +
+              '</div>' +
+              '<div>' +
+                '<h4 style="color:var(--color-light-brown);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Yoga Assignments</h4>' +
+                (yoga.length
+                  ? yoga.slice(0, 3).map(function(y) { return '<p>' + (y.title || '-') + ' <span class="session-category">' + (y.category || '') + '</span></p>'; }).join('')
+                  : '<p style="color:#888;font-style:italic;">No yoga sessions assigned.</p>') +
+              '</div>' +
+            '</div>';
+        })
+        .catch(function() { content.innerHTML = '<p class="empty-state">Failed to load profile.</p>'; });
+    }
+
+    document.getElementById('close-detail-btn').addEventListener('click', function() {
+      document.getElementById('client-detail-panel').style.display = 'none';
+    });
+
+    document.getElementById('search-btn').addEventListener('click', function() {
+      loadClients(document.getElementById('search-input').value.trim());
+    });
+
+    document.getElementById('search-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') loadClients(document.getElementById('search-input').value.trim());
+    });
+
+    document.querySelectorAll('.filter-tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilter();
+      });
+    });
+
+    // Check for filter param in URL
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('filter') === 'paid') {
+      currentFilter = 'paid';
+      document.querySelectorAll('.filter-tab').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelector('[data-filter="paid"]').classList.add('active');
+    }
+
+    loadClients();
+  </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diet Plan Management — AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">📊</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">👥</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">🌿</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link active"><span class="nav-link-icon">🥗</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">🧘</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">⭐</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">💳</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:20px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Diet Plan Management</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Assign and customise diet plans. Only <strong>Paid (Premium)</strong> users can be assigned diet plans.</p>
+      </div>
+
+      <!-- Create & Assign New Diet Plan -->
+      <div class="section-card" style="margin-bottom:28px;">
+        <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:4px;">Create &amp; Assign Diet Plan</h3>
+        <p style="font-size:0.88rem;color:#7a6a55;margin-bottom:20px;">Create a new diet plan and assign it directly to a premium user.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="form-group">
+            <label for="new-plan-title">Plan Title</label>
+            <input type="text" id="new-plan-title" placeholder="e.g. Vata Balancing Diet" />
+          </div>
+          <div class="form-group">
+            <label for="new-plan-prakriti">Prakriti Type</label>
+            <select id="new-plan-prakriti">
+              <option value="">Select type…</option>
+              <option value="vata">Vata</option>
+              <option value="pitta">Pitta</option>
+              <option value="kapha">Kapha</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="new-plan-recommended">Recommended Foods</label>
+          <textarea id="new-plan-recommended" rows="3" placeholder="e.g. Warm soups, ghee, sesame seeds, root vegetables…"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="new-plan-avoid">Foods to Avoid</label>
+          <textarea id="new-plan-avoid" rows="3" placeholder="e.g. Cold drinks, raw salads, dry crackers…"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="new-plan-lifestyle">Lifestyle Tips</label>
+          <textarea id="new-plan-lifestyle" rows="3" placeholder="e.g. Eat at regular times, avoid fasting, stay warm…"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="assign-user-select">Assign to Premium User</label>
+          <select id="assign-user-select">
+            <option value="">Loading paid users…</option>
+          </select>
+          <span style="font-size:0.8rem;color:#c8a96e;margin-top:4px;display:block;">Only premium (paid) users are shown here.</span>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button class="btn-primary" id="save-new-plan-btn">Save &amp; Assign Plan</button>
+          <button class="btn-secondary" id="clear-new-plan-btn">Clear Form</button>
+        </div>
+        <p id="assign-confirm-msg" style="display:none;margin-top:12px;" class="status-msg success"></p>
+      </div>
+
+      <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:16px;">All Clients — Diet Status</h3>
+
+      <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Client Name</th>
+              <th>Email</th>
+              <th>Membership</th>
+              <th>Prakriti Type</th>
+              <th>Diet Plan Status</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="diet-tbody">
+            <tr><td colspan="8" class="empty-state">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Inline customise form (shown below selected row) -->
+      <div id="customise-form-section" style="display:none;" class="section-card" style="margin-top:24px;">
+        <h3>Customise Diet Plan</h3>
+        <p id="customise-client-name" style="font-size:0.9rem;color:#7a6a55;margin-bottom:16px;"></p>
+        <div class="form-group">
+          <label>Recommended Foods</label>
+          <textarea id="custom-recommended" rows="3" placeholder="Enter recommended foods…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Foods to Avoid</label>
+          <textarea id="custom-avoid" rows="3" placeholder="Enter foods to avoid…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Lifestyle Tips</label>
+          <textarea id="custom-lifestyle" rows="3" placeholder="Enter lifestyle tips…"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-primary" id="save-customise-btn">Save Changes</button>
+          <button class="btn-secondary" id="cancel-customise-btn">Cancel</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() {
+      sidebar.classList.add('open');
+      if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    });
+    document.getElementById('sidebar-close').addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('status-msg');
+      el.textContent = msg; el.className = 'status-msg ' + (type || 'info'); el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    var currentDietId = null;
+
+    // Load paid users into the assign dropdown
+    function loadPaidUsers() {
+      fetch('/api/admin/clients', { credentials: 'include' })
+        .then(function(r) { return r.ok ? r.json() : []; })
+        .then(function(clients) {
+          var paid = clients.filter(function(c) { return c.membership_type === 'paid'; });
+          var sel = document.getElementById('assign-user-select');
+          if (!paid.length) {
+            sel.innerHTML = '<option value="">No premium users found</option>';
+            return;
+          }
+          sel.innerHTML = '<option value="">Select a premium user…</option>' +
+            paid.map(function(c) {
+              return '<option value="' + c.id + '">' + (c.name || c.email) + ' (' + c.email + ')</option>';
+            }).join('');
+        })
+        .catch(function() {});
+    }
+
+    document.getElementById('save-new-plan-btn').addEventListener('click', function() {
+      var userId = document.getElementById('assign-user-select').value;
+      var prakritiType = document.getElementById('new-plan-prakriti').value;
+      var recommended = document.getElementById('new-plan-recommended').value.trim();
+      var avoid = document.getElementById('new-plan-avoid').value.trim();
+      var lifestyle = document.getElementById('new-plan-lifestyle').value.trim();
+
+      if (!userId) { showMsg('Please select a premium user to assign the plan to.', 'error'); return; }
+      if (!prakritiType) { showMsg('Please select a Prakriti type.', 'error'); return; }
+      if (!recommended) { showMsg('Please enter recommended foods.', 'error'); return; }
+
+      var btn = document.getElementById('save-new-plan-btn');
+      btn.disabled = true;
+      btn.textContent = 'Assigning…';
+      fetch('/api/admin/diet/assign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          user_id: parseInt(userId),
+          prakriti_type: prakritiType,
+          recommended_foods: recommended,
+          avoid_foods: avoid,
+          lifestyle_tips: lifestyle
+        })
+      })
+        .then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, d: d }; });
+        })
+        .then(function(res) {
+          if (res.ok) {
+            var confirmMsg = document.getElementById('assign-confirm-msg');
+            confirmMsg.textContent = 'Diet plan successfully assigned. Client will see it on their Diet Plan page.';
+            confirmMsg.style.display = 'block';
+            setTimeout(function() { confirmMsg.style.display = 'none'; }, 5000);
+            document.getElementById('clear-new-plan-btn').click();
+            loadDiet();
+          } else {
+            showMsg(res.d.error || 'Failed to assign plan. Please try again.', 'error');
+          }
+        })
+        .catch(function() { showMsg('Network error.', 'error'); })
+        .finally(function() { btn.disabled = false; btn.textContent = 'Save & Assign Plan'; });
+    });
+
+    document.getElementById('clear-new-plan-btn').addEventListener('click', function() {
+      document.getElementById('new-plan-title').value = '';
+      document.getElementById('new-plan-prakriti').value = '';
+      document.getElementById('new-plan-recommended').value = '';
+      document.getElementById('new-plan-avoid').value = '';
+      document.getElementById('new-plan-lifestyle').value = '';
+      document.getElementById('assign-user-select').value = '';
+    });
+
+    function loadDiet() {
+      fetch('/api/admin/diet/clients', { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) throw new Error('Failed');
+          return r.json();
+        })
+        .then(function(rows) {
+          if (!rows) return;
+          var tbody = document.getElementById('diet-tbody');
+          if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No diet data available.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = rows.map(function(r, i) {
+            var memberBadge = r.membership_type === 'paid'
+              ? '<span class="badge badge-approved">Paid</span>'
+              : '<span class="badge badge-pending">Free</span>';
+            var prakriti = r.prakriti_type
+              ? '<span class="badge badge-' + r.prakriti_type.toLowerCase() + '">' + r.prakriti_type + '</span>'
+              : '—';
+            var status = r.diet_id
+              ? (r.customized_at ? '<span class="badge badge-approved">Customised</span>' : '<span class="badge badge-pending">Default</span>')
+              : '<span style="color:#888;font-size:0.82rem;">No plan</span>';
+            var lastUpdated = r.customized_at ? new Date(r.customized_at).toLocaleDateString() : '—';
+            var action;
+            if (r.membership_type !== 'paid') {
+              action = '<span style="color:#bbb;font-size:0.8rem;" title="Only paid users can be assigned diet plans">Premium only</span>';
+            } else if (r.diet_id) {
+              action = '<button class="btn-sm btn-outline customise-btn" data-id="' + r.diet_id + '" data-name="' + (r.name || r.email) + '">Customise</button>';
+            } else {
+              action = '<span style="color:#888;font-size:0.82rem;">No plan yet</span>';
+            }
+            return '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td>' + (r.name || '—') + '</td>' +
+              '<td>' + (r.email || '—') + '</td>' +
+              '<td>' + memberBadge + '</td>' +
+              '<td>' + prakriti + '</td>' +
+              '<td>' + status + '</td>' +
+              '<td>' + lastUpdated + '</td>' +
+              '<td>' + action + '</td>' +
+              '</tr>';
+          }).join('');
+
+          tbody.querySelectorAll('.customise-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              currentDietId = btn.dataset.id;
+              document.getElementById('customise-client-name').textContent = 'Customising plan for: ' + btn.dataset.name;
+              document.getElementById('customise-form-section').style.display = 'block';
+              document.getElementById('customise-form-section').scrollIntoView({ behavior: 'smooth' });
+            });
+          });
+        })
+        .catch(function() {
+          document.getElementById('diet-tbody').innerHTML = '<tr><td colspan="8" class="empty-state">Failed to load. Please refresh.</td></tr>';
+        });
+    }
+
+    document.getElementById('cancel-customise-btn').addEventListener('click', function() {
+      document.getElementById('customise-form-section').style.display = 'none';
+      currentDietId = null;
+    });
+
+    document.getElementById('save-customise-btn').addEventListener('click', function() {
+      if (!currentDietId) return;
+      var btn = document.getElementById('save-customise-btn');
+      btn.disabled = true;
+      fetch('/api/admin/diet/' + currentDietId + '/customize', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          recommended_foods: document.getElementById('custom-recommended').value.trim(),
+          avoid_foods: document.getElementById('custom-avoid').value.trim(),
+          lifestyle_tips: document.getElementById('custom-lifestyle').value.trim(),
+        })
+      })
+        .then(function(r) {
+          if (r.ok) {
+            showMsg('Diet plan updated successfully', 'success');
+            document.getElementById('customise-form-section').style.display = 'none';
+            loadDiet();
+          } else {
+            showMsg('Failed to update', 'error');
+          }
+        })
+        .catch(function() { showMsg('Network error', 'error'); })
+        .finally(function() { btn.disabled = false; });
+    });
+
+    loadDiet();
+    loadPaidUsers();
+  </script>
+</body>
+</html>

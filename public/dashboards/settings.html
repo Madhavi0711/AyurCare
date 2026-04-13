@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/wellness.css" />
+  <style>
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid #e8d5a3;
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 0.95rem; color: var(--color-text); }
+    .toggle-desc  { font-size: 0.82rem; color: #7a6a55; margin-top: 2px; }
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #ccc;
+      border-radius: 26px;
+      cursor: pointer;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider { background: var(--color-brown); }
+    input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+    /* Dark mode applied to body */
+    body.dark-mode {
+      background: #1a1208;
+      color: #e8d5a3;
+    }
+    body.dark-mode .section-card,
+    body.dark-mode .sp-content {
+      background: #2a1e10;
+      border-color: #4a3520;
+      color: #e8d5a3;
+    }
+    body.dark-mode .sp-navbar {
+      background: #1a1208;
+      border-color: #4a3520;
+    }
+    body.dark-mode .toggle-label { color: #e8d5a3; }
+    body.dark-mode .toggle-desc  { color: #c8a96e; }
+    body.dark-mode h2, body.dark-mode h3 { color: #c8a96e; }
+  </style>
+  <script src="../js/client-init.js"></script>
+</head>
+<body class="wellness-page" id="settings-body">
+
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link active">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+
+  <main class="sp-content">
+    <h2 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:4px;">Settings</h2>
+    <p style="color:#7a6a55;font-size:0.9rem;margin-bottom:28px;">Manage your preferences and website settings.</p>
+
+    <p id="settings-status" class="status-msg" style="display:none;" role="alert"></p>
+
+    <!-- Appearance -->
+    <div class="section-card" style="margin-bottom:20px;">
+      <h3 style="color:var(--color-brown);font-family:Georgia,serif;font-size:1rem;margin-bottom:16px;">Appearance</h3>
+      <div class="toggle-row">
+        <div>
+          <p class="toggle-label">Dark Mode</p>
+          <p class="toggle-desc">Switch to a darker colour scheme for low-light environments.</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-dark" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="section-card" style="margin-bottom:20px;">
+      <h3 style="color:var(--color-brown);font-family:Georgia,serif;font-size:1rem;margin-bottom:16px;">Notifications</h3>
+      <div class="toggle-row">
+        <div>
+          <p class="toggle-label">Enable Notifications</p>
+          <p class="toggle-desc">Receive updates about your assessments, diet plans, and wellness tips.</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-notif" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Account -->
+    <div class="section-card" style="margin-bottom:20px;">
+      <h3 style="color:var(--color-brown);font-family:Georgia,serif;font-size:1rem;margin-bottom:16px;">Account</h3>
+      <div class="toggle-row">
+        <div>
+          <p class="toggle-label">Profile &amp; Health Details</p>
+          <p class="toggle-desc">Update your name, age, height, weight, and health information.</p>
+        </div>
+        <a href="/dashboards/profile.html" class="btn-secondary" style="padding:8px 18px;font-size:0.85rem;white-space:nowrap;">Go to Profile</a>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <p class="toggle-label">Plans &amp; Payment</p>
+          <p class="toggle-desc">View your subscription plans and upgrade to Premium.</p>
+        </div>
+        <a href="/dashboards/plans.html" class="btn-secondary" style="padding:8px 18px;font-size:0.85rem;white-space:nowrap;">View Plans</a>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="save-settings-btn">Save Settings</button>
+  </main>
+
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // Drawer
+    var drawer  = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer()  { drawer.classList.add('open');    overlay.classList.add('active');    document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    function doLogout() { fetch('/api/logout',{method:'POST'}).finally(function(){ window.location.href='/index.html'; }); }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+
+    function showStatus(msg, type) {
+      var el = document.getElementById('settings-status');
+      el.textContent = msg; el.className = 'status-msg ' + (type||'info'); el.style.display = 'block';
+      setTimeout(function(){ el.style.display='none'; }, 4000);
+    }
+
+    var darkToggle  = document.getElementById('toggle-dark');
+    var notifToggle = document.getElementById('toggle-notif');
+
+    // Apply dark mode immediately on toggle — uses shared client-init.js function
+    darkToggle.addEventListener('change', function() {
+      if (window.ayurApplyDarkMode) window.ayurApplyDarkMode(darkToggle.checked);
+    });
+
+    // Settings are loaded and applied by client-init.js automatically.
+    // The toggles are synced by client-init.js when it fetches /api/client/settings.
+
+    // Save settings
+    document.getElementById('save-settings-btn').addEventListener('click', function() {
+      var btn = document.getElementById('save-settings-btn');
+      btn.disabled = true;
+      fetch('/api/client/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          dark_mode: darkToggle.checked,
+          notifications_enabled: notifToggle.checked
+        })
+      })
+        .then(function(r) {
+          if (r.ok) { showStatus('Settings saved successfully.', 'success'); }
+          else { showStatus('Failed to save settings.', 'error'); }
+        })
+        .catch(function(){ showStatus('Network error.', 'error'); })
+        .finally(function(){ btn.disabled = false; });
+    });
+  </script>
+</body>
+</html>

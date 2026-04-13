@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page">
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">📊</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">👥</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">🌿</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">🥗</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">🧘</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">⭐</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link active"><span class="nav-link-icon">📈</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:20px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Analytics &amp; Reports</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Insights based on paid/premium users and approved assessments only.</p>
+      </div>
+      <div id="page-error" class="error-banner" hidden></div>
+
+      <!-- Paid-user stat cards -->
+      <div class="summary-cards" style="margin-bottom:32px;">
+        <div class="summary-card">
+          <h3>Total Paid Users</h3>
+          <p class="summary-value" id="stat-paid-users">—</p>
+          <p class="summary-label">Active premium members</p>
+        </div>
+        <div class="summary-card">
+          <h3>Approved Assessments</h3>
+          <p class="summary-value" id="stat-approved">—</p>
+          <p class="summary-label">From paid users</p>
+        </div>
+        <div class="summary-card">
+          <h3>Vata Dominant</h3>
+          <p class="summary-value" id="stat-vata">—</p>
+          <p class="summary-label">Paid users — Vata type</p>
+        </div>
+        <div class="summary-card">
+          <h3>Pitta Dominant</h3>
+          <p class="summary-value" id="stat-pitta">—</p>
+          <p class="summary-label">Paid users — Pitta type</p>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <section class="charts-section" aria-label="Analytics charts">
+        <div id="charts-error" class="charts-error" hidden></div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>Prakriti Distribution (Approved)</h4>
+            <canvas id="prakriti-pie-chart" aria-label="Prakriti distribution doughnut chart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>Daily Assessments (Last 30 Days)</h4>
+            <canvas id="daily-tests-chart" aria-label="Daily assessments bar chart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>Active Users (Last 30 Days)</h4>
+            <canvas id="user-activity-chart" aria-label="Active users line chart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="filter-card" aria-label="Report filters">
+        <h3>Report Filters</h3>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" name="startDate" />
+          </div>
+          <div class="filter-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" name="endDate" />
+          </div>
+          <div class="filter-group">
+            <label for="prakritiType">Prakriti Type</label>
+            <select id="prakritiType" name="prakritiType">
+              <option value="">All Types</option>
+              <option value="vata">Vata</option>
+              <option value="pitta">Pitta</option>
+              <option value="kapha">Kapha</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="planType">Subscription Plan</label>
+            <input type="text" id="planType" name="planType" placeholder="e.g. Premium" />
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-primary" id="apply-filters-btn">Apply Filters</button>
+          <button class="btn-export" id="export-csv-btn">Export CSV</button>
+        </div>
+      </section>
+
+      <!-- Results Table -->
+      <section class="results-section" aria-label="Report results">
+        <h3>Results <span id="result-count"></span></h3>
+        <div class="table-wrapper">
+          <table id="reports-table">
+            <thead>
+              <tr>
+                <th>Client Name</th>
+                <th>Email</th>
+                <th>Prakriti Type</th>
+                <th>Status</th>
+                <th>Assessment Date</th>
+                <th>Diet Plan</th>
+                <th>Yoga Assignments</th>
+                <th>Subscription Plan</th>
+              </tr>
+            </thead>
+            <tbody id="reports-tbody">
+              <tr><td colspan="8" class="empty-state">Apply filters to load report data.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() {
+      sidebar.classList.add('open');
+      document.getElementById('hamburger-btn').setAttribute('aria-expanded', 'true');
+      if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    });
+    document.getElementById('sidebar-close').addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      document.getElementById('hamburger-btn').setAttribute('aria-expanded', 'false');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showError(msg) {
+      const el = document.getElementById('page-error');
+      el.textContent = msg; el.hidden = false;
+    }
+    function clearError() {
+      const el = document.getElementById('page-error');
+      el.hidden = true; el.textContent = '';
+    }
+    function getFilterParams() {
+      const p = new URLSearchParams();
+      const s = document.getElementById('startDate').value;
+      const e = document.getElementById('endDate').value;
+      const pt = document.getElementById('prakritiType').value;
+      const pl = document.getElementById('planType').value.trim();
+      if (s)  p.set('startDate', s);
+      if (e)  p.set('endDate', e);
+      if (pt) p.set('prakritiType', pt);
+      if (pl) p.set('planType', pl);
+      return p;
+    }
+    function formatDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString();
+    }
+    function badge(cls, text) {
+      return text ? `<span class="badge badge-${cls}">${text}</span>` : '—';
+    }
+    function renderTable(rows) {
+      const tbody = document.getElementById('reports-tbody');
+      const countEl = document.getElementById('result-count');
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No records match the selected filters.</td></tr>';
+        countEl.textContent = '(0 records)';
+        return;
+      }
+      countEl.textContent = `(${rows.length} record${rows.length !== 1 ? 's' : ''})`;
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${r.client_name || '—'}</td>
+          <td>${r.client_email || '—'}</td>
+          <td>${badge(r.dominant_type ? r.dominant_type.toLowerCase().split(' ')[0] : '', r.dominant_type)}</td>
+          <td>${badge(r.prakriti_status, r.prakriti_status)}</td>
+          <td>${formatDate(r.assessment_date)}</td>
+          <td>${r.diet_summary ? r.diet_summary.substring(0, 80) + (r.diet_summary.length > 80 ? '…' : '') : '—'}</td>
+          <td>${r.yoga_assignment_count ?? 0}</td>
+          <td>${r.subscription_plan || '—'}</td>
+        </tr>`).join('');
+    }
+
+    document.getElementById('apply-filters-btn').addEventListener('click', async () => {
+      clearError();
+      try {
+        const res = await fetch(`/api/admin/reports?${getFilterParams()}`);
+        if (!res.ok) { const b = await res.json().catch(() => ({})); showError(b.error || `Error ${res.status}`); return; }
+        renderTable(await res.json());
+      } catch (_) { showError('Failed to load report data. Please try again.'); }
+    });
+
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+      window.location.href = `/api/admin/reports/export?${getFilterParams()}`;
+    });
+  </script>
+  <script src="../js/charts.js"></script>
+  <script>
+    (function () {
+      async function loadAnalytics() {
+        try {
+          const res = await fetch('/api/admin/analytics');
+          if (!res.ok) {
+            const b = await res.json().catch(() => ({}));
+            const el = document.getElementById('charts-error');
+            el.textContent = 'Could not load analytics: ' + (b.error || res.status);
+            el.hidden = false;
+            return;
+          }
+          const data = await res.json();
+
+          // Populate paid-user stat cards from prakriti distribution (approved only)
+          const dist = data.prakritiDistribution || {};
+          const totalApproved = (dist.vata || 0) + (dist.pitta || 0) + (dist.kapha || 0);
+          document.getElementById('stat-approved').textContent = totalApproved;
+          document.getElementById('stat-vata').textContent = dist.vata || 0;
+          document.getElementById('stat-pitta').textContent = dist.pitta || 0;
+
+          // Fetch paid users count from clients API
+          fetch('/api/admin/clients', { credentials: 'include' })
+            .then(function(r) { return r.ok ? r.json() : []; })
+            .then(function(clients) {
+              var paid = clients.filter(function(c) { return c.membership_type === 'paid'; });
+              document.getElementById('stat-paid-users').textContent = paid.length;
+            })
+            .catch(function() {});
+
+          AyurCharts.renderPrakritiPie('prakriti-pie-chart', data.prakritiDistribution);
+          AyurCharts.renderDailyTests('daily-tests-chart', data.dailyTests);
+          AyurCharts.renderUserActivity('user-activity-chart', data.userActivity);
+        } catch (_) {
+          const el = document.getElementById('charts-error');
+          el.textContent = 'Failed to load analytics data. Please refresh.';
+          el.hidden = false;
+        }
+      }
+      loadAnalytics();
+    }());
+  </script>
+</body>
+</html>

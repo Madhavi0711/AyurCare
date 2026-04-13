@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatments - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/wellness.css" />
+  <script src="../js/client-init.js"></script>
+</head>
+<body class="wellness-page">
+
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link active">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link active">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+
+  <!-- Page hero banner -->
+  <div class="tr-hero">
+    <div class="tr-hero-overlay"></div>
+    <div class="tr-hero-content">
+      <p class="wl-hero-eyebrow">Authentic Ayurvedic Therapies</p>
+      <h1 class="wl-hero-title" style="font-size:clamp(1.8rem,4vw,2.8rem);">Traditional Treatments</h1>
+      <p class="wl-hero-desc" style="font-size:0.97rem;">Experience traditional healing therapies designed for complete wellness. Each treatment is personalised to your Prakriti to restore balance and rejuvenate body and mind.</p>
+    </div>
+  </div>
+
+  <main class="sp-content">
+
+    <!-- Intro note -->
+    <div class="tr-intro-note">
+      <span class="tr-intro-icon">&#128203;</span>
+      <p>All treatments are best experienced in person at our wellness centre. Browse the details below and contact us to book your session.</p>
+    </div>
+
+    <!-- Treatment Cards Grid -->
+    <div class="tr-grid">
+
+      <!-- Abhyanga -->
+      <div class="tr-card" id="tr-abhyanga">
+        <div class="tr-card-img" style="background-image:url('/images/garbhasanskar.png');position:relative;">
+          <div class="img-placeholder" style="height:100%;position:absolute;inset:0;opacity:0;border-radius:0;">Abhyanga Therapy</div>
+          <span style="position:absolute;bottom:12px;left:16px;background:rgba(0,0,0,0.5);color:#fff;padding:4px 10px;border-radius:4px;font-size:0.82rem;">Abhyanga Therapy</span>
+        </div>
+        <div class="tr-card-body">
+          <div class="tr-card-meta">
+            <span class="tr-badge">Massage Therapy</span>
+            <span class="tr-badge" style="background:#fff3cd;color:#856404;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Popular</span>
+            <span class="tr-duration">&#9200; 60 minutes</span>
+          </div>
+          <h2 class="tr-card-title">Abhyanga Therapy</h2>
+          <p class="tr-card-desc">A traditional full-body Ayurvedic oil massage using warm herbal oils selected according to your Prakriti. This therapy helps in improving blood circulation, relaxing muscles, and promoting overall detoxification of the body. It also nourishes the skin and calms the nervous system.</p>
+          <div class="tr-card-details">
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Key Benefits</h4>
+              <ul class="tr-benefits">
+                <li>Reduces stress and fatigue</li>
+                <li>Improves blood circulation</li>
+                <li>Enhances skin health</li>
+                <li>Promotes better sleep</li>
+              </ul>
+            </div>
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Recommended For</h4>
+              <p class="tr-recommended">Stress, body pain, poor circulation, dry skin, fatigue</p>
+            </div>
+            <div class="tr-contact-block">
+              <span class="tr-contact-icon">&#128222;</span>
+              <p>For a personalised Abhyanga session, visit our wellness centre or contact us at <strong>+91 98765 43210</strong> to book an appointment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shirodhara -->
+      <div class="tr-card" id="tr-shirodhara">
+        <div class="tr-card-img" style="background-image:url('/images/wellness-bg.avif');position:relative;">
+          <span style="position:absolute;bottom:12px;left:16px;background:rgba(0,0,0,0.5);color:#fff;padding:4px 10px;border-radius:4px;font-size:0.82rem;">Shirodhara</span>
+        </div>
+        <div class="tr-card-body">
+          <div class="tr-card-meta">
+            <span class="tr-badge">Mind Therapy</span>
+            <span class="tr-badge" style="background:#d1ecf1;color:#0c5460;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Recommended</span>
+            <span class="tr-duration">&#9200; 45 minutes</span>
+          </div>
+          <h2 class="tr-card-title">Shirodhara</h2>
+          <p class="tr-card-desc">A deeply relaxing therapy where a continuous stream of warm herbal oil is gently poured over the forehead. This process calms the mind, enhances mental clarity, and balances the nervous system. It is highly effective for stress-related conditions.</p>
+          <div class="tr-card-details">
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Key Benefits</h4>
+              <ul class="tr-benefits">
+                <li>Relieves anxiety and stress</li>
+                <li>Improves sleep quality</li>
+                <li>Enhances concentration</li>
+                <li>Balances mental health</li>
+              </ul>
+            </div>
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Recommended For</h4>
+              <p class="tr-recommended">Anxiety, insomnia, mental fatigue, headaches, hypertension</p>
+            </div>
+            <div class="tr-contact-block">
+              <span class="tr-contact-icon">&#128222;</span>
+              <p>To experience Shirodhara therapy, connect with our Ayurvedic experts at <strong>+91 98765 43210</strong> or visit our centre.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panchakarma -->
+      <div class="tr-card" id="tr-panchakarma">
+        <div class="tr-card-img" style="background-image:url('/images/Panchakarma.jpg');position:relative;">
+          <span style="position:absolute;bottom:12px;left:16px;background:rgba(0,0,0,0.5);color:#fff;padding:4px 10px;border-radius:4px;font-size:0.82rem;">Panchakarma Detox</span>
+        </div>
+        <div class="tr-card-body">
+          <div class="tr-card-meta">
+            <span class="tr-badge">Detox Programme</span>
+            <span class="tr-badge" style="background:#e2d9f3;color:#3d1a78;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Intensive</span>
+            <span class="tr-duration">&#9200; Multi-day</span>
+          </div>
+          <h2 class="tr-card-title">Panchakarma Detox</h2>
+          <p class="tr-card-desc">A comprehensive Ayurvedic detoxification programme that removes deep-rooted toxins from the body through a series of therapies. It restores balance in the body systems and enhances overall health and immunity.</p>
+          <div class="tr-card-details">
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Key Benefits</h4>
+              <ul class="tr-benefits">
+                <li>Deep detoxification</li>
+                <li>Boosts immunity</li>
+                <li>Improves digestion</li>
+                <li>Rejuvenates body and mind</li>
+              </ul>
+            </div>
+            <div class="tr-detail-block">
+              <h4 class="tr-detail-title">Recommended For</h4>
+              <p class="tr-recommended">Chronic issues, toxin buildup, lifestyle disorders, digestive problems</p>
+            </div>
+            <div class="tr-contact-block">
+              <span class="tr-contact-icon">&#128222;</span>
+              <p>Panchakarma requires expert supervision. Call us at <strong>+91 98765 43210</strong> to schedule a consultation and begin your detox journey.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tr-grid -->
+
+    <!-- Offline note -->
+    <div class="tr-offline-note">
+      <p>&#128205; <strong>Offline consultation recommended for best results.</strong> Our Ayurvedic practitioners will assess your Prakriti and recommend the most suitable treatment plan for you.</p>
+      <a href="tel:+919876543210" class="tr-btn-book" style="margin-top:12px;display:inline-block;">Call +91 98765 43210</a>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="wl-footer">
+    <div class="wl-footer-inner">
+      <div class="wl-footer-brand">
+        <a href="/index.html" class="wl-logo">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span class="wl-logo-text">AYURCARE</span>
+        </a>
+        <p class="wl-footer-tagline">Ancient Wisdom. Modern Wellness.</p>
+      </div>
+      <div class="wl-footer-contact">
+        <p class="wl-footer-contact-title">Need help choosing the right treatment?</p>
+        <p class="wl-footer-contact-num">Call us at <strong>+91 98765 43210</strong></p>
+        <p class="wl-footer-contact-note">Mon–Sat, 9 AM – 6 PM</p>
+      </div>
+      <!-- <div class="wl-footer-links">
+        <a href="/dashboards/patientDashboard.html">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html">Prakriti Test</a>
+        <a href="/dashboards/yogaPlans.html">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html">Premium</a>
+      </div> -->
+    </div>
+    <div class="wl-footer-bottom">
+      <p>&copy; 2025 AYURCARE. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    var drawer  = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+
+    function openDrawer()  { drawer.classList.add('open');    overlay.classList.add('active');    document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    function doLogout() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { if (d) document.getElementById('nav-user-name').textContent = d.name; })
+      .catch(function() {});
+  </script>
+</body>
+</html>

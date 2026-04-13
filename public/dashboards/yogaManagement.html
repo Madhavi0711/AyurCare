@@ -1,0 +1,358 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoga Management — AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">📊</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">👥</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">🌿</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">🥗</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link active"><span class="nav-link-icon">🧘</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">⭐</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">💳</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:24px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Yoga Management</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Create yoga sessions and assign them to clients. Sessions are visible to all authenticated users.</p>
+      </div>
+
+      <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+
+      <!-- Add / Edit Session Form -->
+      <div class="admin-form-card" style="margin-bottom:28px;">
+        <h3 id="form-heading">Add New Session</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="f-title" placeholder="e.g. Morning Vata Flow" />
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <input type="text" id="f-category" placeholder="e.g. Beginner, Pranayama" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Video Link</label>
+            <input type="url" id="f-video" placeholder="https://youtube.com/..." />
+          </div>
+          <div class="form-group">
+            <label>Therapist Name</label>
+            <input type="text" id="f-therapist" placeholder="e.g. Dr. Priya Sharma" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="f-desc" rows="3" placeholder="Brief description of the session…"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-primary" id="save-session-btn">Save Session</button>
+          <button class="btn-secondary" id="cancel-edit-btn" style="display:none;">Cancel Edit</button>
+        </div>
+      </div>
+
+      <!-- Sessions Table -->
+      <div class="section-card" style="margin-bottom:28px;">
+        <h3>All Yoga Sessions <span style="font-size:0.82rem;color:#7a6a55;font-weight:400;">(visible to all logged-in users)</span></h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Therapist</th>
+                <th>Video</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sessions-tbody">
+              <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Assign Session to Client -->
+      <div class="section-card">
+        <h3>Assign Session to Client</h3>
+        <p style="font-size:0.88rem;color:#7a6a55;margin-bottom:16px;">Assign a specific yoga session directly to a client's plan.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="assign-session-select">Yoga Session</label>
+            <select id="assign-session-select">
+              <option value="">Select a session…</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="assign-client-select">Client</label>
+            <select id="assign-client-select">
+              <option value="">Loading clients…</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" id="assign-session-btn">Assign to Client</button>
+        <p id="assign-confirm-msg" style="display:none;margin-top:12px;" class="status-msg success"></p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() {
+      sidebar.classList.add('open');
+      if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    });
+    document.getElementById('sidebar-close').addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('status-msg');
+      el.textContent = msg;
+      el.className = 'status-msg ' + (type || 'info');
+      el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    var editingId = null;
+
+    function clearForm() {
+      ['f-title','f-category','f-video','f-therapist','f-desc'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+      editingId = null;
+      document.getElementById('form-heading').textContent = 'Add New Session';
+      document.getElementById('save-session-btn').textContent = 'Save Session';
+      document.getElementById('cancel-edit-btn').style.display = 'none';
+    }
+
+    document.getElementById('cancel-edit-btn').addEventListener('click', clearForm);
+
+    function loadSessions() {
+      fetch('/api/admin/yoga/sessions', { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) throw new Error('Failed');
+          return r.json();
+        })
+        .then(function(data) {
+          if (!data) return;
+          var sessions = data.sessions || [];
+          var tbody = document.getElementById('sessions-tbody');
+
+          // Also populate assign dropdown
+          var sel = document.getElementById('assign-session-select');
+          sel.innerHTML = '<option value="">Select a session…</option>' +
+            sessions.map(function(s) {
+              return '<option value="' + s.id + '">' + s.title + ' (' + (s.category || 'General') + ')</option>';
+            }).join('');
+
+          if (!sessions.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No sessions yet. Add one above.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = sessions.map(function(s, i) {
+            var videoCell = s.video_link
+              ? '<a href="' + s.video_link + '" target="_blank" rel="noopener" style="color:var(--color-light-brown);font-size:0.82rem;">Watch ↗</a>'
+              : '<span style="color:#bbb;font-size:0.82rem;">—</span>';
+            return '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td>' + (s.title || '—') + '</td>' +
+              '<td>' + (s.category || '—') + '</td>' +
+              '<td>' + (s.therapist_name || '—') + '</td>' +
+              '<td>' + videoCell + '</td>' +
+              '<td style="display:flex;gap:8px;flex-wrap:wrap;">' +
+                '<button class="btn-sm btn-outline edit-btn" ' +
+                  'data-id="' + s.id + '" ' +
+                  'data-title="' + (s.title||'').replace(/"/g,'&quot;') + '" ' +
+                  'data-category="' + (s.category||'').replace(/"/g,'&quot;') + '" ' +
+                  'data-therapist="' + (s.therapist_name||'').replace(/"/g,'&quot;') + '" ' +
+                  'data-video="' + (s.video_link||'').replace(/"/g,'&quot;') + '" ' +
+                  'data-desc="' + (s.description||'').replace(/"/g,'&quot;') + '">' +
+                  'Edit</button>' +
+                '<button class="btn-sm btn-primary delete-btn" data-id="' + s.id + '" style="background:#c0392b;border-color:#c0392b;">Delete</button>' +
+              '</td>' +
+              '</tr>';
+          }).join('');
+
+          tbody.querySelectorAll('.edit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              editingId = btn.dataset.id;
+              document.getElementById('f-title').value     = btn.dataset.title;
+              document.getElementById('f-category').value  = btn.dataset.category;
+              document.getElementById('f-therapist').value = btn.dataset.therapist;
+              document.getElementById('f-video').value     = btn.dataset.video;
+              document.getElementById('f-desc').value      = btn.dataset.desc;
+              document.getElementById('form-heading').textContent = 'Edit Session';
+              document.getElementById('save-session-btn').textContent = 'Update Session';
+              document.getElementById('cancel-edit-btn').style.display = 'inline-flex';
+              document.getElementById('save-session-btn').scrollIntoView({ behavior: 'smooth' });
+            });
+          });
+
+          tbody.querySelectorAll('.delete-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              if (!confirm('Delete this session? This will also remove all client assignments for it.')) return;
+              btn.disabled = true;
+              fetch('/api/admin/yoga/session/' + btn.dataset.id, { method: 'DELETE', credentials: 'include' })
+                .then(function(r) {
+                  if (r.ok) { showMsg('Session deleted', 'success'); loadSessions(); }
+                  else { showMsg('Failed to delete', 'error'); btn.disabled = false; }
+                })
+                .catch(function() { showMsg('Network error', 'error'); btn.disabled = false; });
+            });
+          });
+        })
+        .catch(function() {
+          document.getElementById('sessions-tbody').innerHTML = '<tr><td colspan="6" class="empty-state">Failed to load. Please refresh.</td></tr>';
+        });
+    }
+
+    document.getElementById('save-session-btn').addEventListener('click', function() {
+      var title    = document.getElementById('f-title').value.trim();
+      var category = document.getElementById('f-category').value.trim();
+      if (!title)    { showMsg('Title is required', 'error'); return; }
+      if (!category) { showMsg('Category is required', 'error'); return; }
+
+      var btn = document.getElementById('save-session-btn');
+      btn.disabled = true;
+      btn.textContent = editingId ? 'Updating…' : 'Saving…';
+
+      var url    = editingId ? '/api/admin/yoga/session/' + editingId : '/api/yoga/upload';
+      var method = editingId ? 'PATCH' : 'POST';
+
+      fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          title:          title,
+          category:       category,
+          description:    document.getElementById('f-desc').value.trim() || null,
+          video_link:     document.getElementById('f-video').value.trim() || null,
+          therapist_name: document.getElementById('f-therapist').value.trim() || null,
+        })
+      })
+        .then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, d: d }; });
+        })
+        .then(function(res) {
+          if (res.ok) {
+            showMsg(editingId ? 'Session updated successfully' : 'Session saved — now visible to all users', 'success');
+            clearForm();
+            loadSessions();
+          } else {
+            var errMsg = res.d.error || (res.d.details ? res.d.details.join(', ') : 'Failed');
+            showMsg(errMsg, 'error');
+          }
+        })
+        .catch(function() { showMsg('Network error', 'error'); })
+        .finally(function() {
+          btn.disabled = false;
+          btn.textContent = editingId ? 'Update Session' : 'Save Session';
+        });
+    });
+
+    // Load clients for assign dropdown
+    function loadClients() {
+      fetch('/api/admin/clients', { credentials: 'include' })
+        .then(function(r) { return r.ok ? r.json() : []; })
+        .then(function(clients) {
+          var sel = document.getElementById('assign-client-select');
+          if (!clients.length) {
+            sel.innerHTML = '<option value="">No clients found</option>';
+            return;
+          }
+          sel.innerHTML = '<option value="">Select a client…</option>' +
+            clients.map(function(c) {
+              var label = (c.name || c.email) + ' (' + c.membership_type + ')';
+              return '<option value="' + c.id + '">' + label + '</option>';
+            }).join('');
+        })
+        .catch(function() {});
+    }
+
+    document.getElementById('assign-session-btn').addEventListener('click', function() {
+      var sessionId = document.getElementById('assign-session-select').value;
+      var clientId  = document.getElementById('assign-client-select').value;
+      if (!sessionId) { showMsg('Please select a session', 'error'); return; }
+      if (!clientId)  { showMsg('Please select a client', 'error'); return; }
+
+      var btn = document.getElementById('assign-session-btn');
+      btn.disabled = true;
+      btn.textContent = 'Assigning…';
+
+      fetch('/api/admin/yoga/assign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ user_id: parseInt(clientId), yoga_session_id: parseInt(sessionId) })
+      })
+        .then(function(r) {
+          return r.json().then(function(d) { return { ok: r.ok, d: d }; });
+        })
+        .then(function(res) {
+          if (res.ok) {
+            var confirmMsg = document.getElementById('assign-confirm-msg');
+            confirmMsg.textContent = 'Session assigned to client successfully. They will see it in their Yoga Sessions page.';
+            confirmMsg.style.display = 'block';
+            setTimeout(function() { confirmMsg.style.display = 'none'; }, 5000);
+            document.getElementById('assign-session-select').value = '';
+            document.getElementById('assign-client-select').value = '';
+          } else {
+            showMsg(res.d.error || 'Failed to assign', 'error');
+          }
+        })
+        .catch(function() { showMsg('Network error', 'error'); })
+        .finally(function() { btn.disabled = false; btn.textContent = 'Assign to Client'; });
+    });
+
+    loadSessions();
+    loadClients();
+  </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoga Sessions - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/client-init.js"></script>
+</head>
+<body>
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link active">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link active">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+  <main class="sp-content">
+    <h2>Yoga Sessions</h2>
+    <p class="page-subtitle">Browse all available yoga sessions and your assigned programme</p>
+    <div class="sp-page-banner" style="background-image:url('/images/yoga-bg.webp');"></div>
+    <p id="loading" class="loading" aria-live="polite">Loading yoga sessions...</p>
+    <p id="status-msg" class="status-msg" role="alert" style="display:none;"></p>
+    <div class="filter-bar">
+      <label for="category-filter">Filter by category:</label>
+      <select id="category-filter"><option value="">All categories</option></select>
+    </div>
+    <div id="sessions-container"></div>
+    <section id="assigned-section" style="display:none;">
+      <h3 style="margin-bottom:1rem; color:var(--color-brown);">Your Assigned Sessions</h3>
+      <div id="assignments-container"></div>
+    </section>
+    <p style="font-size:0.85rem;color:#7a6a55;font-style:italic;margin-top:24px;padding:12px 16px;background:#fdf6ec;border:1px solid #e8d5a3;border-radius:6px;">This page is also accessible from Yoga Plans for a combined view.</p>
+  </main>
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // Drawer
+    var drawer = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer() { drawer.classList.add('open'); overlay.classList.add('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    // Logout
+    function doLogout() { fetch('/api/logout',{method:'POST'}).finally(function(){ window.location.href='/index.html'; }); }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+    // Load user name
+    fetch('/api/client/dashboard',{credentials:'include'}).then(function(r){return r.ok?r.json():null;}).then(function(d){if(d&&document.getElementById('nav-user-name'))document.getElementById('nav-user-name').textContent=d.name;}).catch(function(){});
+  </script>
+  <script src="../js/yoga.js"></script>
+</body>
+</html>

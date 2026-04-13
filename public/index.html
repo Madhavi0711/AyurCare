@@ -1,0 +1,1110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYURCARE - Ayurvedic Health Platform</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /*  Landing page overrides  */
+    .lp-hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background: url('images/ayur-bg.avif') center/cover no-repeat;
+      background-color: #3b2a1a;
+    }
+    .lp-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(30,18,8,0.78) 0%, rgba(58,38,20,0.55) 100%);
+    }
+    .lp-hero-body {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      padding: 0 40px;
+    }
+    .lp-eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c8a96e;
+      margin-bottom: 18px;
+    }
+    .lp-hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      color: #fff;
+      font-family: Georgia, serif;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .lp-hero-desc {
+      font-size: 1.08rem;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.75;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+    .lp-hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .lp-btn-primary {
+      padding: 14px 36px;
+      background: #c8a96e;
+      color: #3b2a1a;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .lp-btn-primary:hover { background: #b8994e; text-decoration: none; color: #3b2a1a; }
+    .lp-btn-outline {
+      padding: 14px 36px;
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .lp-btn-outline:hover { border-color: #c8a96e; color: #c8a96e; text-decoration: none; }
+
+    /* Features — dark themed bento grid */
+    .lp-features {
+      padding: 90px 0;
+      background: #2a1c0e;
+      position: relative;
+      overflow: hidden;
+    }
+    .lp-features::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,169,110,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .lp-features .lp-section-title { color: #f0e0c0; }
+    .lp-features .lp-section-sub   { color: rgba(240,224,192,0.6); }
+
+    .lp-section-title {
+      text-align: center;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: #5a3e28;
+      font-family: Georgia, serif;
+      margin-bottom: 12px;
+    }
+    .lp-section-sub {
+      text-align: center;
+      color: #5a4a38;
+      font-size: 0.97rem;
+      margin-bottom: 48px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+    .lp-features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      border: 2px solid rgba(200,169,110,0.18);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .lp-feature-card {
+      background: rgba(255,255,255,0.03);
+      border: none;
+      border-radius: 0;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: background 0.4s ease;
+    }
+    .lp-feature-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: #c8a96e;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+    .lp-feature-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-right: 1px solid rgba(200,169,110,0.12);
+      border-bottom: 1px solid rgba(200,169,110,0.12);
+      pointer-events: none;
+    }
+    .lp-feature-card:hover {
+      background: rgba(200,169,110,0.07);
+    }
+    .lp-feature-card:hover::before {
+      transform: scaleY(1);
+    }
+    .lp-feature-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c8a96e;
+      margin-bottom: 20px;
+      display: block;
+      opacity: 0.7;
+    }
+    .lp-feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .lp-feature-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #f0e0c0;
+      margin-bottom: 10px;
+      font-family: Georgia, serif;
+      transition: color 0.3s ease;
+    }
+    .lp-feature-card:hover .lp-feature-title { color: #c8a96e; }
+    .lp-feature-desc {
+      font-size: 0.88rem;
+      color: rgba(240,224,192,0.55);
+      line-height: 1.75;
+      transition: color 0.3s ease;
+    }
+    .lp-feature-card:hover .lp-feature-desc { color: rgba(240,224,192,0.8); }
+
+    /* How it works */
+    .lp-how {
+      padding: 80px 0;
+      background: #fdf6ec;
+    }
+    .lp-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .lp-step {
+      text-align: center;
+      padding: 0 16px;
+    }
+    .lp-step-num {
+      width: 52px;
+      height: 52px;
+      background: #5a3e28;
+      color: #fdf6ec;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0 auto 16px;
+      font-family: Georgia, serif;
+    }
+    .lp-step-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: #5a3e28;
+      margin-bottom: 8px;
+    }
+    .lp-step-desc {
+      font-size: 0.85rem;
+      color: #7a6a55;
+      line-height: 1.6;
+    }
+
+    /* Prakriti banner */
+    .lp-prakriti {
+      padding: 80px 0;
+      background: #fdf6ec;
+    }
+    .lp-prakriti-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .lp-prakriti-img {
+      width: 100%;
+      height: 360px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: url('images/prakriti-bg.jpeg') center/cover no-repeat;
+      background-color: #e8d5a3;
+    }
+    .lp-prakriti-content h2 {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: #5a3e28;
+      font-family: Georgia, serif;
+      margin-bottom: 16px;
+    }
+    .lp-prakriti-content p {
+      color: #7a6a55;
+      line-height: 1.75;
+      margin-bottom: 16px;
+      font-size: 0.97rem;
+    }
+    .lp-dosha-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .lp-dosha-tag {
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .lp-dosha-tag.vata { background: #d1ecf1; color: #0c5460; }
+    .lp-dosha-tag.pitta { background: #fde8d8; color: #7a3a00; }
+    .lp-dosha-tag.kapha { background: #e2d9f3; color: #3d1a78; }
+
+    /* Prakriti dosha cards with circular images */
+    .lp-dosha-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 40px;
+    }
+    .lp-dosha-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 24px 28px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(90,62,40,0.09);
+      border: 1px solid #e8d5a3;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .lp-dosha-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(90,62,40,0.16);
+    }
+    .lp-dosha-card.vata { border-top: 4px solid #0c5460; }
+    .lp-dosha-card.pitta { border-top: 4px solid #c0440a; }
+    .lp-dosha-card.kapha { border-top: 4px solid #3d1a78; }
+    .lp-dosha-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 20px;
+      display: block;
+      border: 3px solid #e8d5a3;
+      box-shadow: 0 4px 14px rgba(90,62,40,0.15);
+    }
+    .lp-dosha-card.vata .lp-dosha-circle { border-color: #0c5460; }
+    .lp-dosha-card.pitta .lp-dosha-circle { border-color: #c0440a; }
+    .lp-dosha-card.kapha .lp-dosha-circle { border-color: #3d1a78; }
+
+    /* Restore readable text inside dosha cards (overrides dark bento styles) */
+    .lp-dosha-card .lp-feature-title {
+      color: #3b2a1a;
+      transition: none;
+    }
+    .lp-dosha-card:hover .lp-feature-title {
+      color: #5a3e28;
+    }
+    .lp-dosha-card .lp-feature-desc {
+      color: #5a4a38;
+      transition: none;
+    }
+    .lp-dosha-card:hover .lp-feature-desc {
+      color: #5a4a38;
+    }
+
+    /* Doctor intro */
+    .lp-doctor-intro {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #e8d5a3;
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+      box-shadow: 0 2px 12px rgba(90,62,40,0.07);
+    }
+    .lp-doctor-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8a96e, #5a3e28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .lp-doctor-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #5a3e28;
+      font-family: Georgia, serif;
+      margin-bottom: 4px;
+    }
+    .lp-doctor-title {
+      font-size: 0.85rem;
+      color: #7a6a55;
+    }
+
+    /* Feature card animations — handled in the bento CSS above */
+
+    /* Stats strip */
+    .lp-stats {
+      background: #3b2a1a;
+      border-bottom: 1px solid rgba(200,169,110,0.2);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .lp-stat {
+      padding: 28px 24px;
+      text-align: center;
+      border-right: 1px solid rgba(200,169,110,0.2);
+    }
+    .lp-stat:last-child { border-right: none; }
+    .lp-stat-num {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #c8a96e;
+      font-family: Georgia, serif;
+    }
+    .lp-stat-label {
+      font-size: 0.82rem;
+      color: rgba(200,169,110,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* Scroll-in animation */
+    .lp-fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .lp-fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Testimonials */
+    .lp-testimonials {
+      padding: 80px 0;
+      background: #2a1c0e;
+      overflow: hidden;
+    }
+    .lp-testimonials .lp-section-title { color: #f0e0c0; }
+    .lp-testimonials .lp-section-sub   { color: rgba(240,224,192,0.6); }
+    .lp-testimonials-track-wrap {
+      overflow: hidden;
+      position: relative;
+      margin-top: 48px;
+    }
+    .lp-testimonials-track-wrap::before,
+    .lp-testimonials-track-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .lp-testimonials-track-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, #2a1c0e, transparent);
+    }
+    .lp-testimonials-track-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, #2a1c0e, transparent);
+    }
+    .lp-testimonials-track {
+      display: flex;
+      gap: 24px;
+      width: max-content;
+      animation: scrollTestimonials 32s linear infinite;
+    }
+    .lp-testimonials-track:hover {
+      animation-play-state: paused;
+    }
+    @keyframes scrollTestimonials {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .lp-testimonial-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(200,169,110,0.2);
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 300px;
+      flex-shrink: 0;
+    }
+    .lp-testimonial-stars {
+      color: #c8a96e;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    .lp-testimonial-text {
+      font-size: 0.9rem;
+      color: rgba(240,224,192,0.75);
+      line-height: 1.7;
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+    .lp-testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .lp-testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8a96e, #5a3e28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .lp-testimonial-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #f0e0c0;
+    }
+    .lp-testimonial-location {
+      font-size: 0.78rem;
+      color: rgba(200,169,110,0.6);
+    }
+
+    @media (max-width: 768px) {
+      .lp-dosha-cards { grid-template-columns: 1fr; }
+      .lp-doctor-intro { flex-direction: column; text-align: center; }
+    }
+
+    /* CTA section */
+    .lp-cta {
+      padding: 80px 0;
+      background: #5a3e28;
+      text-align: center;
+    }
+    .lp-cta h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: #fdf6ec;
+      font-family: Georgia, serif;
+      margin-bottom: 16px;
+    }
+    .lp-cta p {
+      color: rgba(253,246,236,0.75);
+      font-size: 1rem;
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    /* Footer */
+    .lp-footer {
+      background: #3b2a1a;
+      color: #c8a96e;
+      padding: 32px 0;
+    }
+    .lp-footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .lp-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .lp-footer-logo img { height: 28px; }
+    .lp-footer-logo span { font-size: 1rem; font-weight: 700; letter-spacing: 1px; color: #c8a96e; }
+    .lp-footer-copy { font-size: 0.85rem; color: rgba(200,169,110,0.65); }
+    .lp-footer-links { display: flex; gap: 20px; }
+    .lp-footer-links a { font-size: 0.85rem; color: rgba(200,169,110,0.75); text-decoration: none; }
+    .lp-footer-links a:hover { color: #c8a96e; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .lp-features-grid { grid-template-columns: repeat(2, 1fr); }
+      .lp-steps { grid-template-columns: repeat(2, 1fr); }
+      .lp-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .lp-hero { min-height: 70vh; }
+      .lp-hero-body { padding: 0 20px; }
+      .lp-hero-title { font-size: 2rem; }
+      .lp-hero-desc { font-size: 0.95rem; }
+      .lp-hero-btns { flex-direction: column; gap: 12px; }
+      .lp-btn-primary, .lp-btn-outline { text-align: center; padding: 13px 28px; }
+      .lp-features-grid { grid-template-columns: 1fr; }
+      .lp-prakriti-inner { grid-template-columns: 1fr; }
+      .lp-prakriti-img { height: 220px; }
+      .lp-steps { grid-template-columns: 1fr 1fr; }
+      .lp-stats { grid-template-columns: 1fr 1fr; }
+      .lp-stat { padding: 20px 16px; }
+      .lp-stat-num { font-size: 1.6rem; }
+      .lp-footer-inner { flex-direction: column; text-align: center; }
+      .lp-footer-links { justify-content: center; flex-wrap: wrap; gap: 12px; }
+      .lp-features { padding: 56px 0; }
+      .lp-how { padding: 56px 0; }
+      .lp-prakriti { padding: 56px 0; }
+      .lp-cta { padding: 56px 0; }
+      .lp-section-title { font-size: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .lp-hero-title { font-size: 1.7rem; }
+      .lp-steps { grid-template-columns: 1fr; }
+      .lp-stats { grid-template-columns: 1fr 1fr; }
+      .lp-stat-num { font-size: 1.4rem; }
+      .lp-stat-label { font-size: 0.75rem; }
+      .lp-feature-card { padding: 24px 20px; }
+      .lp-step { padding: 0 8px; }
+      .lp-cta h2 { font-size: 1.4rem; }
+      .lp-section-title { font-size: 1.3rem; }
+    }
+
+    /* ── Landing page hamburger & mobile nav ── */
+    .lp-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.6rem;
+      color: var(--color-beige, #fdf6ec);
+      line-height: 1;
+      padding: 4px 8px;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lp-mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 280px;
+      height: 100%;
+      background: #5a3e28;
+      z-index: 800;
+      flex-direction: column;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+      transition: transform 0.25s ease;
+      transform: translateX(-100%);
+    }
+    .lp-mobile-nav.open {
+      display: flex;
+      transform: translateX(0);
+    }
+    .lp-mobile-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid rgba(200,169,110,0.3);
+    }
+    .lp-mobile-nav-logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #c8a96e;
+      text-decoration: none;
+    }
+    .lp-mobile-nav-close {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #fdf6ec;
+      line-height: 1;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lp-mobile-nav-links {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .lp-mobile-nav-links a {
+      display: block;
+      padding: 14px 24px;
+      color: rgba(253,246,236,0.85);
+      text-decoration: none;
+      font-size: 0.97rem;
+      border-bottom: 1px solid rgba(200,169,110,0.15);
+    }
+    .lp-mobile-nav-links a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #c8a96e;
+      text-decoration: none;
+    }
+    .lp-mobile-nav-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 790;
+    }
+    .lp-mobile-nav-overlay.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .landing-nav { display: none; }
+      .lp-hamburger { display: flex; }
+      /* Landing header on small phones */
+      .landing-header .container { padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!--  Header  -->
+  <header class="landing-header">
+    <div class="container">
+      <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <img src="images/logo.png" alt="AYURCARE" style="height:36px;width:auto;border-radius:4px;" onerror="this.style.display='none'" />
+        <span>AYURCARE</span>
+      </a>
+      <nav class="landing-nav">
+        <a href="#features" style="color:rgba(253,246,236,0.8);font-size:0.9rem;">Features</a>
+        <a href="#how-it-works" style="color:rgba(253,246,236,0.8);font-size:0.9rem;">How It Works</a>
+        <a href="login.html" style="color:rgba(253,246,236,0.8);font-size:0.9rem;">Login</a>
+        <!-- <a href="login.html" class="btn btn-primary" id="get-started-btn">Get Started</a> -->
+      </nav>
+      <button class="lp-hamburger" id="lp-hamburger" aria-label="Open menu">&#9776;</button>
+    </div>
+  </header>
+
+  <!-- Mobile nav overlay -->
+  <div class="lp-mobile-nav-overlay" id="lp-mobile-nav-overlay" aria-hidden="true"></div>
+
+  <!-- Mobile nav drawer -->
+  <nav class="lp-mobile-nav" id="lp-mobile-nav" aria-label="Mobile navigation">
+    <div class="lp-mobile-nav-header">
+      <a href="index.html" class="lp-mobile-nav-logo">AYURCARE</a>
+      <button class="lp-mobile-nav-close" id="lp-mobile-nav-close" aria-label="Close menu">&#10005;</button>
+    </div>
+    <div class="lp-mobile-nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="login.html">Get Started</a>
+    </div>
+  </nav>
+
+  <!--  Hero  -->
+  <section class="lp-hero">
+    <div class="lp-hero-overlay"></div>
+    <div class="lp-hero-body">
+      <p class="lp-eyebrow">Ancient Wisdom. Modern Wellness.</p>
+      <h1 class="lp-hero-title">Experience the Power of Ayurveda for Modern Living</h1>
+      <p class="lp-hero-desc">Discover your unique body constitution, receive personalised treatments, and begin a transformative wellness journey rooted in ancient Ayurvedic wisdom.</p>
+      <div class="lp-hero-btns">
+        <a href="login.html" class="lp-btn-primary" id="hero-cta">Get Started</a>
+        
+      </div>
+    </div>
+  </section>
+
+  <!--  Stats Strip  -->
+  <div class="lp-stats">
+    <div class="lp-stat">
+      <div class="lp-stat-num">500+</div>
+      <div class="lp-stat-label">Users</div>
+    </div>
+    <div class="lp-stat">
+      <div class="lp-stat-num">100+</div>
+      <div class="lp-stat-label">Treatments</div>
+    </div>
+    <div class="lp-stat">
+      <div class="lp-stat-num">24/7</div>
+      <div class="lp-stat-label">Support</div>
+    </div>
+    <div class="lp-stat">
+      <div class="lp-stat-num">100%</div>
+      <div class="lp-stat-label">Personalised Plans</div>
+    </div>
+  </div>
+
+  <!--  Features  -->
+  <section class="lp-features" id="features">
+    <div class="container">
+      <h2 class="lp-section-title">Everything You Need for Holistic Wellness</h2>
+      <p class="lp-section-sub">From ancient Ayurvedic assessments to modern wellness tracking — AYURCARE brings it all together.</p>
+      <div class="lp-features-grid">
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">01</span>
+          <h3 class="lp-feature-title">Personalised Prakriti Analysis</h3>
+          <p class="lp-feature-desc">Discover your unique Vata, Pitta, or Kapha constitution through our guided 10-question assessment.</p>
+        </div>
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">02</span>
+          <h3 class="lp-feature-title">Authentic Ayurvedic Treatments</h3>
+          <p class="lp-feature-desc">Experience traditional therapies like Abhyanga, Shirodhara, and Panchakarma tailored to your Prakriti.</p>
+        </div>
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">03</span>
+          <h3 class="lp-feature-title">Guided Yoga Plans</h3>
+          <p class="lp-feature-desc">Follow structured yoga programmes designed by certified therapists for your specific health goals.</p>
+        </div>
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">04</span>
+          <h3 class="lp-feature-title">Expert Consultation</h3>
+          <p class="lp-feature-desc">Connect with certified Ayurvedic practitioners for personalised guidance and treatment recommendations.</p>
+        </div>
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">05</span>
+          <h3 class="lp-feature-title">Diet &amp; Lifestyle Guidance</h3>
+          <p class="lp-feature-desc">Receive customised dietary recommendations and lifestyle tips based on your Ayurvedic constitution.</p>
+        </div>
+        <div class="lp-feature-card lp-fade-up">
+          <span class="lp-feature-num">06</span>
+          <h3 class="lp-feature-title">Premium Wellness Content</h3>
+          <p class="lp-feature-desc">Access exclusive videos, wellness guides, and expert knowledge available to premium members.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--  Doctor Intro  -->
+  <section class="lp-how" style="padding:60px 0;background:#fff;">
+    <div class="container">
+      <div class="lp-doctor-intro lp-fade-up">
+        <div class="lp-doctor-avatar">👩‍⚕️</div>
+        <div>
+          <div class="lp-doctor-name">Dr. Minakshi Ruat</div>
+          <div class="lp-doctor-title">Ayurvedic Physician &amp; Wellness Expert · 15+ Years Experience</div>
+          <p style="font-size:0.85rem;color:#5a4a38;margin-top:6px;line-height:1.6;">"Every person is unique. Through Prakriti analysis, I help you understand your body's natural intelligence and guide you toward lasting health."</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--  How It Works  -->
+  <section class="lp-how" id="how-it-works">
+    <div class="container">
+      <h2 class="lp-section-title">How AYURCARE Works</h2>
+      <p class="lp-section-sub">Three simple steps to begin your personalised Ayurvedic wellness journey.</p>
+      <div class="lp-steps" style="grid-template-columns:repeat(3,1fr);">
+        <div class="lp-step">
+          <div class="lp-step-num">1</div>
+          <div class="lp-step-title">Take Prakriti Test</div>
+          <p class="lp-step-desc">Answer 10 simple questions about your body and lifestyle.</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">2</div>
+          <div class="lp-step-title">Get Personalised Plan</div>
+          <p class="lp-step-desc">Receive diet, yoga, and treatment recommendations tailored to you.</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">3</div>
+          <div class="lp-step-title">Start Your Journey</div>
+          <p class="lp-step-desc">Begin your Ayurvedic wellness journey with expert guidance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--  Prakriti Section  -->
+  <section class="lp-prakriti">
+    <div class="container">
+      <h2 class="lp-section-title">Understand Your Prakriti</h2>
+      <p class="lp-section-sub">In Ayurveda, every individual is born with a unique combination of the three doshas. Understanding your Prakriti is the foundation of personalised wellness.</p>
+
+      <!-- Dosha cards with circular images -->
+      <div class="lp-dosha-cards">
+        <div class="lp-dosha-card vata lp-fade-up">
+          <img src="images/vata.png" alt="Vata Dosha" class="lp-dosha-circle" onerror="this.style.display='none'" />
+          <h3 class="lp-feature-title">Vata — Air &amp; Space</h3>
+          <p class="lp-feature-desc">Creative, energetic, and quick-thinking. Vata types benefit from grounding routines and warm, nourishing foods.</p>
+          <span class="lp-dosha-tag vata" style="margin-top:12px;display:inline-block;">Vata Dosha</span>
+        </div>
+        <div class="lp-dosha-card pitta lp-fade-up">
+          <img src="images/pitta.png" alt="Pitta Dosha" class="lp-dosha-circle" onerror="this.style.display='none'" />
+          <h3 class="lp-feature-title">Pitta — Fire &amp; Water</h3>
+          <p class="lp-feature-desc">Focused, ambitious, and intense. Pitta types thrive with cooling practices and a balanced, moderate lifestyle.</p>
+          <span class="lp-dosha-tag pitta" style="margin-top:12px;display:inline-block;">Pitta Dosha</span>
+        </div>
+        <div class="lp-dosha-card kapha lp-fade-up">
+          <img src="images/kapha.png" alt="Kapha Dosha" class="lp-dosha-circle" onerror="this.style.display='none'" />
+          <h3 class="lp-feature-title">Kapha — Earth &amp; Water</h3>
+          <p class="lp-feature-desc">Calm, steady, and nurturing. Kapha types benefit from stimulating activities and light, energising foods.</p>
+          <span class="lp-dosha-tag kapha" style="margin-top:12px;display:inline-block;">Kapha Dosha</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:40px;">
+        <a href="login.html" class="lp-btn-primary">Discover Your Prakriti</a>
+      </div>
+    </div>
+  </section>
+
+  <!--  Testimonials  -->
+  <section class="lp-testimonials">
+    <div class="container">
+      <h2 class="lp-section-title">What Our Users Say</h2>
+      <p class="lp-section-sub">Real experiences from people who transformed their health with Dr. Minakshi Ruat's guidance.</p>
+    </div>
+    <div class="lp-testimonials-track-wrap">
+      <div class="lp-testimonials-track" id="testimonials-track">
+        <!-- Cards duplicated for seamless loop -->
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"After my Prakriti analysis, Dr. Ruat's personalised diet plan completely changed my energy levels. I feel more balanced than ever."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">P</div>
+            <div>
+              <div class="lp-testimonial-name">Priya Sharma</div>
+              <div class="lp-testimonial-location">Mumbai, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"The yoga plan tailored to my Vata constitution helped me manage anxiety naturally. Truly life-changing guidance."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">R</div>
+            <div>
+              <div class="lp-testimonial-name">Rahul Mehta</div>
+              <div class="lp-testimonial-location">Pune, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★☆</div>
+          <p class="lp-testimonial-text">"I was sceptical at first, but the Panchakarma treatment recommendations were spot on. My digestion has improved dramatically."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">A</div>
+            <div>
+              <div class="lp-testimonial-name">Ananya Iyer</div>
+              <div class="lp-testimonial-location">Bangalore, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"The platform is beautifully designed and the Prakriti test was eye-opening. I now understand why certain foods affect me the way they do."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">S</div>
+            <div>
+              <div class="lp-testimonial-name">Sneha Kulkarni</div>
+              <div class="lp-testimonial-location">Hyderabad, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"Dr. Ruat's expertise shines through every recommendation. The Kapha-balancing diet plan helped me lose weight without feeling deprived."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">V</div>
+            <div>
+              <div class="lp-testimonial-name">Vikram Nair</div>
+              <div class="lp-testimonial-location">Chennai, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"Three months in and my chronic headaches are gone. The Pitta-cooling treatments and diet changes made all the difference."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">D</div>
+            <div>
+              <div class="lp-testimonial-name">Deepika Joshi</div>
+              <div class="lp-testimonial-location">Delhi, India</div>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate set for seamless infinite scroll -->
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"After my Prakriti analysis, Dr. Ruat's personalised diet plan completely changed my energy levels. I feel more balanced than ever."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">P</div>
+            <div>
+              <div class="lp-testimonial-name">Priya Sharma</div>
+              <div class="lp-testimonial-location">Mumbai, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"The yoga plan tailored to my Vata constitution helped me manage anxiety naturally. Truly life-changing guidance."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">R</div>
+            <div>
+              <div class="lp-testimonial-name">Rahul Mehta</div>
+              <div class="lp-testimonial-location">Pune, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★☆</div>
+          <p class="lp-testimonial-text">"I was sceptical at first, but the Panchakarma treatment recommendations were spot on. My digestion has improved dramatically."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">A</div>
+            <div>
+              <div class="lp-testimonial-name">Ananya Iyer</div>
+              <div class="lp-testimonial-location">Bangalore, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"The platform is beautifully designed and the Prakriti test was eye-opening. I now understand why certain foods affect me the way they do."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">S</div>
+            <div>
+              <div class="lp-testimonial-name">Sneha Kulkarni</div>
+              <div class="lp-testimonial-location">Hyderabad, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"Dr. Ruat's expertise shines through every recommendation. The Kapha-balancing diet plan helped me lose weight without feeling deprived."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">V</div>
+            <div>
+              <div class="lp-testimonial-name">Vikram Nair</div>
+              <div class="lp-testimonial-location">Chennai, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="lp-testimonial-card">
+          <div class="lp-testimonial-stars">★★★★★</div>
+          <p class="lp-testimonial-text">"Three months in and my chronic headaches are gone. The Pitta-cooling treatments and diet changes made all the difference."</p>
+          <div class="lp-testimonial-author">
+            <div class="lp-testimonial-avatar">D</div>
+            <div>
+              <div class="lp-testimonial-name">Deepika Joshi</div>
+              <div class="lp-testimonial-location">Delhi, India</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--  CTA  -->
+  <section class="lp-cta">
+    <div class="container">
+      <h2>Start Your Wellness Journey Today</h2>
+      <p>Join thousands of people who have transformed their health through personalised Ayurvedic guidance.</p>
+      <a href="signup.html" class="lp-btn-primary" style="font-size:1.05rem;padding:16px 44px;">Create Free Account</a>
+    </div>
+  </section>
+
+  <!--  Footer  -->
+  <footer class="lp-footer">
+    <div class="container">
+      <div class="lp-footer-inner">
+        <a href="index.html" class="lp-footer-logo">
+          <img src="images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <div style="font-size:0.85rem;color:rgba(200,169,110,0.75);">
+          <p style="margin-bottom:4px;">📞 +91 98765 43210</p>
+          <p style="color:rgba(200,169,110,0.5);font-size:0.8rem;">Mon–Sat, 9 AM – 6 PM</p>
+        </div>
+        <!-- <div class="lp-footer-links">
+          <a href="login.html">Login</a>
+          <a href="signup.html">Sign Up</a>
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How It Works</a>
+        </div> -->
+        <p class="lp-footer-copy">&copy; 2025 AYURCARE. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger / mobile nav toggle
+    (function () {
+      var hamburger = document.getElementById('lp-hamburger');
+      var mobileNav = document.getElementById('lp-mobile-nav');
+      var overlay   = document.getElementById('lp-mobile-nav-overlay');
+      var closeBtn  = document.getElementById('lp-mobile-nav-close');
+
+      function openNav() {
+        mobileNav.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        hamburger.setAttribute('aria-expanded', 'true');
+      }
+
+      function closeNav() {
+        mobileNav.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburger.addEventListener('click', openNav);
+      closeBtn.addEventListener('click', closeNav);
+      overlay.addEventListener('click', closeNav);
+
+      // Close nav when a link inside it is clicked
+      mobileNav.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeNav);
+      });
+    }());
+
+    // Scroll-in fade-up animation
+    (function () {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll('.lp-fade-up').forEach(function (el, i) {
+        el.style.transitionDelay = (i % 3) * 0.1 + 's';
+        observer.observe(el);
+      });
+    }());
+
+    // If user is already logged in, redirect to appropriate dashboard
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(r => { if (r.ok) window.location.href = '/dashboards/patientDashboard.html'; })
+      .catch(() => {});
+    fetch('/api/admin/dashboard', { credentials: 'include' })
+      .then(r => { if (r.ok) window.location.href = '/dashboards/adminDashboard.html'; })
+      .catch(() => {});
+  </script>
+</body>
+</html>

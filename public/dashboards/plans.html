@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plans &amp; Payment - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    .tier-card {
+      background: #fff;
+      border: 2px solid #e8d5a3;
+      border-radius: 16px;
+      padding: 32px 28px;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .tier-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(90,62,40,0.12); }
+    .tier-card.gold  { border-color: #c8a96e; }
+    .tier-card.platinum { border-color: #8b6abf; background: linear-gradient(160deg,#faf8ff 0%,#f5f0ff 100%); }
+    .tier-card.current-tier { box-shadow: 0 0 0 3px #c8a96e; }
+    .tier-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .tier-badge.free     { background: #f0e8dc; color: #5a3e28; }
+    .tier-badge.gold     { background: #c8a96e; color: #3b2a1a; }
+    .tier-badge.platinum { background: #8b6abf; color: #fff; }
+    .tier-badge.active   { background: #27ae60; color: #fff; }
+    .tier-name { font-size: 1.4rem; font-family: Georgia,serif; color: #3b2a1a; margin: 0 0 6px; }
+    .tier-price { font-size: 2rem; font-weight: 700; color: #5a3e28; font-family: Georgia,serif; margin: 12px 0 4px; }
+    .tier-price span { font-size: 0.9rem; font-weight: 400; color: #7a6a55; }
+    .tier-desc { font-size: 0.88rem; color: #7a6a55; margin-bottom: 20px; line-height: 1.6; }
+    .tier-features { list-style: none; padding: 0; margin: 0 0 24px; }
+    .tier-features li { font-size: 0.88rem; color: #5a3e28; padding: 6px 0; border-bottom: 1px solid #f0e8dc; display: flex; align-items: center; gap: 8px; }
+    .tier-features li::before { content: ""; color: #27ae60; font-weight: 700; flex-shrink: 0; }
+    .tier-features li.locked { color: #bbb; }
+    .tier-features li.locked::before { content: "?"; color: #ddd; }
+    .tier-btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-family: Georgia,serif; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease; }
+    .tier-btn.current { background: #f0e8dc; color: #7a6a55; cursor: default; }
+    .tier-btn.upgrade-gold { background: #c8a96e; color: #3b2a1a; }
+    .tier-btn.upgrade-gold:hover { background: #b8994e; }
+    .tier-btn.upgrade-platinum { background: #8b6abf; color: #fff; }
+    .tier-btn.upgrade-platinum:hover { background: #7a5aae; }
+    .tier-btn.downgrade { background: #f5f5f5; color: #999; border: 1px solid #ddd; }
+    .tier-btn.downgrade:hover { background: #eee; }
+    .current-tier-banner {
+      background: linear-gradient(135deg, #2a1c0e, #3b2a1a);
+      color: #f0e0c0;
+      border-radius: 12px;
+      padding: 20px 28px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: Georgia,serif;
+    }
+    .current-tier-banner .tier-icon { font-size: 2rem; }
+    .current-tier-banner strong { font-size: 1.1rem; display: block; margin-bottom: 2px; }
+    .current-tier-banner span { font-size: 0.85rem; color: rgba(240,224,192,0.7); }
+    @media (max-width: 900px) { .tier-grid { grid-template-columns: 1fr; } }
+  </style>
+  <script src="../js/client-init.js"></script>
+</head>
+<body>
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link active">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+  <main class="sp-content">
+    <div class="page-header">
+      <h2>Subscription Plans</h2>
+      <p>Choose the plan that fits your wellness journey.</p>
+    </div>
+
+    <!-- Current tier banner -->
+    <div class="current-tier-banner" id="current-tier-banner">
+      <span class="tier-icon" id="tier-icon"></span>
+      <div>
+        <strong id="tier-banner-name">Free Plan</strong>
+        <span id="tier-banner-desc">Prakriti assessment access only.</span>
+      </div>
+    </div>
+
+    <!-- Tier cards -->
+    <div class="tier-grid">
+      <!-- Free -->
+      <div class="tier-card" id="card-free">
+        <span class="tier-badge free">Free</span>
+        <h3 class="tier-name">Free</h3>
+        <div class="tier-price">?0</div>
+        <p class="tier-desc">Get started with your Ayurvedic journey at no cost.</p>
+        <ul class="tier-features">
+          <li>Prakriti assessment</li>
+          <li>Prakriti result &amp; analysis</li>
+          <li class="locked">Personalised diet plan</li>
+          <li class="locked">Yoga plans &amp; sessions</li>
+          <li class="locked">Premium content</li>
+        </ul>
+        <button class="tier-btn current" id="btn-free" disabled>Current Plan</button>
+      </div>
+
+      <!-- Gold -->
+      <div class="tier-card gold" id="card-gold">
+        <span class="tier-badge gold">Gold</span>
+        <h3 class="tier-name">Gold</h3>
+        <div class="tier-price">?499<span>/month</span></div>
+        <p class="tier-desc">Unlock personalised diet and yoga plans tailored to your Prakriti.</p>
+        <ul class="tier-features">
+          <li>Prakriti assessment &amp; result</li>
+          <li>Personalised diet plan</li>
+          <li>Yoga plans &amp; sessions</li>
+          <li class="locked">Premium content</li>
+        </ul>
+        <button class="tier-btn upgrade-gold" id="btn-gold">Upgrade to Gold</button>
+      </div>
+
+      <!-- Platinum -->
+      <div class="tier-card platinum" id="card-platinum">
+        <span class="tier-badge platinum">Platinum</span>
+        <h3 class="tier-name">Platinum</h3>
+        <div class="tier-price">?999<span>/month</span></div>
+        <p class="tier-desc">Full access to everything — diet, yoga, and exclusive premium content.</p>
+        <ul class="tier-features">
+          <li>Prakriti assessment &amp; result</li>
+          <li>Personalised diet plan</li>
+          <li>Yoga plans &amp; sessions</li>
+          <li>Premium content &amp; videos</li>
+        </ul>
+        <button class="tier-btn upgrade-platinum" id="btn-platinum">Upgrade to Platinum</button>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.1rem;color:var(--color-brown);margin-bottom:16px;font-family:Georgia,serif;">Your Subscriptions</h3>
+    <div id="plans-error" class="error-banner" hidden></div>
+    <div id="plans-container"><p class="plans-empty">Loading plans...</p></div>
+  </main>
+
+  <script>
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    var drawer = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer() { drawer.classList.add('open'); overlay.classList.add('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    function doLogout() { fetch('/api/logout',{method:'POST'}).finally(function(){ window.location.href='/index.html'; }); }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+
+    var currentTier = 'free';
+
+    function applyCurrentTier(tier) {
+      currentTier = tier || 'free';
+      var tiers = ['free','gold','platinum'];
+      var labels = { free:'Free', gold:'Gold', platinum:'Platinum' };
+      var btnLabels = { free:'Current Plan', gold:'Upgrade to Gold', platinum:'Upgrade to Platinum' };
+      var display = document.getElementById('current-tier-display');
+      if (display) { display.textContent = 'Current Plan: ' + labels[currentTier]; display.style.display = 'inline-block'; }
+      tiers.forEach(function(t) {
+        var card = document.getElementById('card-' + (t === 'platinum' ? 'plat' : t));
+        var btn  = document.getElementById('btn-' + (t === 'platinum' ? 'plat' : t));
+        var badge = document.getElementById('badge-' + (t === 'platinum' ? 'plat' : t));
+        if (!card || !btn) return;
+        card.classList.remove('current');
+        btn.disabled = false;
+        btn.textContent = btnLabels[t];
+        btn.className = 'tier-btn ' + (t === 'free' ? 'free' : t === 'gold' ? 'gold' : 'plat') + '-btn';
+        if (t === currentTier) {
+          card.classList.add('current');
+          btn.textContent = 'Current Plan';
+          btn.disabled = true;
+          btn.className = 'tier-btn current-btn';
+          if (badge) { badge.classList.add('active-badge'); }
+        }
+      });
+      if (document.getElementById('nav-user-name')) {}
+    }
+
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) {
+        if (!d) return;
+        if (document.getElementById('nav-user-name')) document.getElementById('nav-user-name').textContent = d.name;
+        applyCurrentTier(d.membership_tier || 'free');
+      })
+      .catch(function() {});
+
+    ['free','gold','plat'].forEach(function(id) {
+      var btn = document.getElementById('btn-' + id);
+      if (!btn) return;
+      btn.addEventListener('click', function() {
+        var tier = btn.getAttribute('data-tier');
+        if (tier === currentTier) return;
+        btn.disabled = true;
+        btn.textContent = 'Processing';
+        fetch('/api/upgrade-tier', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tier: tier })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d.membership_tier) { applyCurrentTier(d.membership_tier); }
+          else { btn.disabled = false; btn.textContent = 'Try Again'; alert(d.error || 'Failed'); }
+        })
+        .catch(function() { btn.disabled = false; btn.textContent = 'Try Again'; });
+      });
+    });
+  </script>
+  <script src="../js/plans.js"></script>
+</body>
+</html>

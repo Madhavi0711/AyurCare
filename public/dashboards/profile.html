@@ -1,0 +1,312 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile &amp; Health Details - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/wellness.css" />
+  <script src="../js/client-init.js"></script>
+</head>
+<body class="wellness-page">
+
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav" aria-label="Main navigation">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+        <button class="sp-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sp-drawer" id="sp-drawer">
+    <div class="sp-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <button class="sp-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="sp-drawer-nav">
+      <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
+      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
+      <a href="/dashboards/profile.html" class="sp-drawer-link active">Profile</a>
+      <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
+    </nav>
+    <div class="sp-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="sp-overlay" id="sp-overlay"></div>
+
+  <main class="sp-content">
+    <div class="sp-page-banner" style="background-image:url('/images/ayur-bg.avif');"></div>
+
+    <div class="two-col-grid" style="align-items:start;">
+
+      <!-- ── Profile Form ─────────────────────────────────────── -->
+      <div>
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:4px;">Profile &amp; Health Details</h2>
+        <p style="color:#7a6a55;font-size:0.9rem;margin-bottom:24px;">Fill in your health information. This helps us personalise your Ayurvedic recommendations.</p>
+
+        <p id="form-status" class="status-msg" style="display:none;" role="alert"></p>
+
+        <div class="section-card">
+          <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:20px;font-size:1rem;">Account Information</h3>
+          <div class="form-group">
+            <label for="acc-name">Full Name</label>
+            <input type="text" id="acc-name" placeholder="Your full name" />
+          </div>
+          <div class="form-group">
+            <label for="acc-email">Email</label>
+            <input type="email" id="acc-email" readonly style="background:#f5f0e8;color:#7a6a55;" />
+          </div>
+          <button class="btn-primary" id="save-name-btn" style="margin-top:4px;">Update Name</button>
+        </div>
+
+        <div class="section-card" style="margin-top:20px;">
+          <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:20px;font-size:1rem;">Health Profile</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label for="hp-age">Age (years)</label>
+              <input type="number" id="hp-age" min="1" max="120" placeholder="e.g. 28" />
+            </div>
+            <div class="form-group">
+              <label for="hp-height">Height (cm)</label>
+              <input type="number" id="hp-height" min="50" max="250" step="0.1" placeholder="e.g. 165" />
+            </div>
+            <div class="form-group">
+              <label for="hp-weight">Weight (kg)</label>
+              <input type="number" id="hp-weight" min="10" max="300" step="0.1" placeholder="e.g. 62" />
+            </div>
+            <div class="form-group">
+              <label>BMI</label>
+              <input type="text" id="hp-bmi" readonly style="background:#f5f0e8;color:#7a6a55;" placeholder="Auto-calculated" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hp-issues">Health Issues / Conditions</label>
+            <textarea id="hp-issues" rows="3" placeholder="e.g. Diabetes, hypertension, back pain, digestive issues..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="hp-complaints">Current Complaints</label>
+            <textarea id="hp-complaints" rows="3" placeholder="e.g. Fatigue, poor sleep, stress, joint pain..."></textarea>
+          </div>
+          <button class="btn-primary" id="save-health-btn">Save Health Profile</button>
+        </div>
+      </div>
+
+      <!-- ── Live Preview Card ────────────────────────────────── -->
+      <div>
+        <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:16px;font-size:1rem;">Your Health Summary</h3>
+        <div id="profile-preview" class="section-card" style="background:linear-gradient(135deg,#fdf6ec,#fff8f0);">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:var(--color-light-brown);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;font-family:Georgia,serif;font-weight:700;" id="preview-avatar">?</div>
+            <div>
+              <p id="preview-name" style="font-size:1.1rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
+              <p id="preview-email" style="font-size:0.82rem;color:#7a6a55;margin:0;"></p>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
+              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Age</p>
+              <p id="preview-age" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
+              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">BMI</p>
+              <p id="preview-bmi" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
+              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Height</p>
+              <p id="preview-height" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
+              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Weight</p>
+              <p id="preview-weight" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Health Issues</p>
+            <p id="preview-issues" style="font-size:0.88rem;color:var(--color-text);margin:0;line-height:1.5;">—</p>
+          </div>
+          <div>
+            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Current Complaints</p>
+            <p id="preview-complaints" style="font-size:0.88rem;color:var(--color-text);margin:0;line-height:1.5;">—</p>
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e8d5a3;">
+            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Membership</p>
+            <p id="preview-membership" style="font-size:0.88rem;font-weight:600;color:var(--color-brown);margin:0;">—</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() {
+        spDropdown.style.display = 'none';
+        avatarBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    // Drawer
+    var drawer  = document.getElementById('sp-drawer');
+    var overlay = document.getElementById('sp-overlay');
+    function openDrawer()  { drawer.classList.add('open');    overlay.classList.add('active');    document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
+    document.getElementById('hamburger-btn').addEventListener('click', openDrawer);
+    document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+    function doLogout() { fetch('/api/logout',{method:'POST'}).finally(function(){ window.location.href='/index.html'; }); }
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
+
+    function showStatus(msg, type) {
+      var el = document.getElementById('form-status');
+      el.textContent = msg; el.className = 'status-msg ' + (type||'info'); el.style.display = 'block';
+      setTimeout(function(){ el.style.display='none'; }, 4000);
+    }
+
+    function calcBMI(h, w) {
+      if (!h || !w || h <= 0) return '—';
+      var bmi = (w / ((h/100) * (h/100))).toFixed(1);
+      return bmi;
+    }
+
+    function updatePreview() {
+      var name = document.getElementById('acc-name').value.trim();
+      var age  = document.getElementById('hp-age').value;
+      var h    = parseFloat(document.getElementById('hp-height').value);
+      var w    = parseFloat(document.getElementById('hp-weight').value);
+      var issues     = document.getElementById('hp-issues').value.trim();
+      var complaints = document.getElementById('hp-complaints').value.trim();
+      var bmi = calcBMI(h, w);
+
+      document.getElementById('preview-name').textContent    = name || '—';
+      document.getElementById('preview-avatar').textContent  = name ? name.charAt(0).toUpperCase() : '?';
+      document.getElementById('preview-age').textContent     = age ? age + ' yrs' : '—';
+      document.getElementById('preview-height').textContent  = h ? h + ' cm' : '—';
+      document.getElementById('preview-weight').textContent  = w ? w + ' kg' : '—';
+      document.getElementById('preview-bmi').textContent     = bmi;
+      document.getElementById('hp-bmi').value                = bmi !== '—' ? bmi : '';
+      document.getElementById('preview-issues').textContent     = issues || '—';
+      document.getElementById('preview-complaints').textContent = complaints || '—';
+    }
+
+    ['acc-name','hp-age','hp-height','hp-weight','hp-issues','hp-complaints'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    // Load existing data
+    fetch('/api/client/profile', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(u) {
+        if (!u) return;
+        document.getElementById('acc-name').value  = u.name  || '';
+        document.getElementById('acc-email').value = u.email || '';
+        document.getElementById('nav-user-name').textContent = u.name || '';
+        document.getElementById('preview-email').textContent = u.email || '';
+        var tier = u.membership_tier || 'free';
+        var tierLabels = { free: 'Free Plan', gold: '⭐ Gold Member', platinum: '💎 Platinum Member' };
+        document.getElementById('preview-membership').textContent = tierLabels[tier] || 'Free Plan';
+        updatePreview();
+      }).catch(function(){});
+
+    fetch('/api/client/health-profile', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(p) {
+        if (!p) return;
+        if (p.age)           document.getElementById('hp-age').value       = p.age;
+        if (p.height_cm)     document.getElementById('hp-height').value    = p.height_cm;
+        if (p.weight_kg)     document.getElementById('hp-weight').value    = p.weight_kg;
+        if (p.health_issues) document.getElementById('hp-issues').value    = p.health_issues;
+        if (p.complaints)    document.getElementById('hp-complaints').value = p.complaints;
+        updatePreview();
+      }).catch(function(){});
+
+    // Save name
+    document.getElementById('save-name-btn').addEventListener('click', function() {
+      var name = document.getElementById('acc-name').value.trim();
+      if (!name) { showStatus('Name cannot be empty.', 'error'); return; }
+      var btn = document.getElementById('save-name-btn');
+      btn.disabled = true;
+      fetch('/api/client/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name: name })
+      })
+        .then(function(r) { return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+        .then(function(res) {
+          if (res.ok) { showStatus('Name updated successfully.', 'success'); updatePreview(); }
+          else { showStatus(res.j.error || 'Failed to update name.', 'error'); }
+        })
+        .catch(function(){ showStatus('Network error.', 'error'); })
+        .finally(function(){ btn.disabled = false; });
+    });
+
+    // Save health profile
+    document.getElementById('save-health-btn').addEventListener('click', function() {
+      var btn = document.getElementById('save-health-btn');
+      btn.disabled = true;
+      fetch('/api/client/health-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          age:           document.getElementById('hp-age').value || null,
+          height_cm:     document.getElementById('hp-height').value || null,
+          weight_kg:     document.getElementById('hp-weight').value || null,
+          health_issues: document.getElementById('hp-issues').value.trim(),
+          complaints:    document.getElementById('hp-complaints').value.trim()
+        })
+      })
+        .then(function(r) {
+          if (r.ok) { showStatus('Health profile saved successfully.', 'success'); }
+          else { showStatus('Failed to save. Please try again.', 'error'); }
+        })
+        .catch(function(){ showStatus('Network error.', 'error'); })
+        .finally(function(){ btn.disabled = false; });
+    });
+  </script>
+</body>
+</html>

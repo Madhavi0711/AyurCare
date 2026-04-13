@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prakriti Management - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" /><span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" /><span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav">
+        <a href="/dashboards/adminDashboard.html" class="nav-link"><span class="nav-link-icon">&#128202;</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">&#128101;</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link active"><span class="nav-link-icon">&#127807;</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">&#129367;</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">&#129496;</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">&#11088;</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">&#128200;</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:20px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Prakriti Management</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Review, approve, and analyse client Prakriti assessments.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+        <button class="btn-secondary filter-tab active" data-filter="all">All Assessments</button>
+        <button class="btn-secondary filter-tab" data-filter="pending">Pending Only</button>
+        <button class="btn-secondary filter-tab" data-filter="approved">Approved Only</button>
+        <button class="btn-secondary filter-tab" data-filter="paid">Paid Users Only</button>
+      </div>
+      <p id="status-msg" class="status-msg" style="display:none;" role="alert"></p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Client Name</th><th>Email</th><th>Membership</th>
+              <th>Dominant Dosha</th><th>Vata</th><th>Pitta</th><th>Kapha</th>
+              <th>Date</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="prakriti-tbody">
+            <tr><td colspan="11" class="empty-state">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script>
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    document.getElementById('hamburger-btn').addEventListener('click', function() { sidebar.classList.add('open'); if (sidebarOverlay) sidebarOverlay.classList.add('active'); });
+    document.getElementById('sidebar-close').addEventListener('click', function() { sidebar.classList.remove('open'); if (sidebarOverlay) sidebarOverlay.classList.remove('active'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('status-msg');
+      el.textContent = msg; el.className = 'status-msg ' + (type || 'info'); el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    var allResults = [];
+    var currentFilter = 'all';
+
+    function renderResults(rows) {
+      var tbody = document.getElementById('prakriti-tbody');
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="11" class="empty-state">No assessments found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function(r, i) {
+        var memberBadge = r.membership_type === 'paid'
+          ? '<span class="badge badge-approved">Paid</span>'
+          : '<span class="badge badge-pending">Free</span>';
+        var statusBadge = r.status === 'pending'
+          ? '<span class="badge badge-pending">Pending</span>'
+          : '<span class="badge badge-approved">Approved</span>';
+        var doshaClass = (r.dominant_type || '').toLowerCase().split('-')[0];
+        var action = r.status === 'pending'
+          ? '<button class="btn-sm btn-primary approve-btn" data-id="' + r.id + '">Approve</button>'
+          : '<span style="color:#888;font-size:0.8rem;">Approved</span>';
+        return '<tr>' +
+          '<td>' + (i + 1) + '</td>' +
+          '<td>' + (r.client_name || '-') + '</td>' +
+          '<td>' + (r.client_email || '-') + '</td>' +
+          '<td>' + memberBadge + '</td>' +
+          '<td><span class="badge badge-' + doshaClass + '">' + (r.dominant_type || '-') + '</span></td>' +
+          '<td>' + (r.vata_score || 0) + '</td>' +
+          '<td>' + (r.pitta_score || 0) + '</td>' +
+          '<td>' + (r.kapha_score || 0) + '</td>' +
+          '<td>' + (r.created_at ? new Date(r.created_at).toLocaleDateString() : '-') + '</td>' +
+          '<td>' + statusBadge + '</td>' +
+          '<td>' + action + '</td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.querySelectorAll('.approve-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          btn.disabled = true;
+          fetch('/api/admin/prakriti/' + btn.dataset.id + '/approve', { method: 'PATCH', credentials: 'include' })
+            .then(function(res) {
+              if (res.ok) { showMsg('Assessment approved successfully', 'success'); loadResults(); }
+              else { showMsg('Failed to approve', 'error'); btn.disabled = false; }
+            })
+            .catch(function() { showMsg('Network error', 'error'); btn.disabled = false; });
+        });
+      });
+    }
+
+    function applyFilter() {
+      var filtered = allResults;
+      if (currentFilter === 'pending')  filtered = allResults.filter(function(r) { return r.status === 'pending'; });
+      if (currentFilter === 'approved') filtered = allResults.filter(function(r) { return r.status === 'approved'; });
+      if (currentFilter === 'paid')     filtered = allResults.filter(function(r) { return r.membership_type === 'paid'; });
+      renderResults(filtered);
+    }
+
+    function loadResults() {
+      fetch('/api/admin/prakriti/all', { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) throw new Error('Failed');
+          return r.json();
+        })
+        .then(function(rows) {
+          if (!rows) return;
+          allResults = rows;
+          applyFilter();
+        })
+        .catch(function() {
+          document.getElementById('prakriti-tbody').innerHTML = '<tr><td colspan="11" class="empty-state">Failed to load. Please refresh.</td></tr>';
+        });
+    }
+
+    document.querySelectorAll('.filter-tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilter();
+      });
+    });
+
+    loadResults();
+  </script>
+</body>
+</html>

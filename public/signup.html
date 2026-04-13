@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — AYURCARE</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:24px;">
+        <img src="images/logo.png" alt="AYURCARE" style="height:36px;width:auto;border-radius:4px;" onerror="this.style.display='none'" />
+        <span>AYURCARE</span>
+      </a>
+      <h1>Create Your Account</h1>
+      <p class="auth-subtitle">Begin your personalised Ayurvedic journey today</p>
+
+      <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+      <form id="signup-form" novalidate>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            autocomplete="name"
+            required
+            placeholder="Your full name"
+          />
+          <span class="field-error" id="name-error"></span>
+          <span style="font-size:0.78rem;color:#888;margin-top:2px;">This will be displayed on your wellness dashboard</span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            autocomplete="email"
+            required
+            placeholder="you@example.com"
+          />
+          <span class="field-error" id="email-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="new-password"
+            required
+            placeholder="At least 8 characters"
+          />
+          <span class="field-error" id="password-error"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+          Create account
+        </button>
+      </form>
+
+      <p class="auth-footer">
+        Already have an account? <a href="login.html">Login</a>
+      </p>
+      <p style="text-align:center;font-size:0.78rem;color:#aaa;margin-top:12px;">By creating an account, you agree to receive personalised wellness recommendations</p>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

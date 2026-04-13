@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="dashboard-page">
+  <header class="mobile-header">
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+      <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+      <span>AYURCARE</span>
+    </a>
+  </header>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboards/adminDashboard.html" class="logo" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--color-light-brown);">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span>AYURCARE</span>
+        </a>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
+      </div>
+      <div class="sidebar-user">Admin Panel</div>
+      <nav class="sidebar-nav" aria-label="Admin navigation">
+        <a href="/dashboards/adminDashboard.html" class="nav-link active"><span class="nav-link-icon">&#128202;</span> Dashboard</a>
+        <a href="/dashboards/clientManagement.html" class="nav-link"><span class="nav-link-icon">&#128101;</span> Clients</a>
+        <a href="/dashboards/prakritiManagement.html" class="nav-link"><span class="nav-link-icon">&#127807;</span> Prakriti</a>
+        <a href="/dashboards/dietManagement.html" class="nav-link"><span class="nav-link-icon">&#129367;</span> Diet Plans</a>
+        <a href="/dashboards/yogaManagement.html" class="nav-link"><span class="nav-link-icon">&#129496;</span> Yoga Plans</a>
+        <a href="/dashboards/contentManagement.html" class="nav-link"><span class="nav-link-icon">&#11088;</span> Premium Content</a>
+        <a href="/dashboards/analytics.html" class="nav-link"><span class="nav-link-icon">&#128200;</span> Analytics</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-outline btn-full" id="logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header" style="margin-bottom:24px;">
+        <h2 style="color:var(--color-brown);font-family:Georgia,serif;">Dashboard Overview</h2>
+        <p style="color:#7a6a55;font-size:0.95rem;">Welcome to the AYURCARE admin panel. Manage clients, assessments, and content.</p>
+      </div>
+      <div id="dashboard-error" class="error-banner" hidden></div>
+
+      <div class="summary-cards">
+        <div class="summary-card" style="cursor:pointer;" onclick="window.location='/dashboards/prakritiManagement.html'">
+          <h3>Pending Assessments</h3>
+          <p class="summary-value" id="pending-assessments-count">-</p>
+          <p class="summary-label">awaiting approval</p>
+        </div>
+        <div class="summary-card" style="cursor:pointer;" onclick="window.location='/dashboards/clientManagement.html'">
+          <h3>Unassigned Plans</h3>
+          <p class="summary-value" id="unassigned-plans-count">-</p>
+          <p class="summary-label">clients without yoga plan</p>
+        </div>
+        <div class="summary-card" style="cursor:pointer;" onclick="window.location='/dashboards/clientManagement.html'">
+          <h3>Total Clients</h3>
+          <p class="summary-value" id="total-clients-count">-</p>
+          <p class="summary-label">registered users</p>
+        </div>
+        <div class="summary-card" style="cursor:pointer;" onclick="window.location='/dashboards/clientManagement.html'">
+          <h3>Premium Users</h3>
+          <p class="summary-value" id="premium-users-count">-</p>
+          <p class="summary-label">paid members</p>
+        </div>
+      </div>
+
+      <div class="activity-grid" style="margin-top:28px;">
+        <div class="activity-card">
+          <h4>Recent Clients</h4>
+          <div id="recent-clients-list"><p style="color:#888;font-size:0.85rem;font-style:italic;">Loading...</p></div>
+        </div>
+        <div class="activity-card">
+          <h4>Pending Assessments</h4>
+          <div id="recent-assessments-list"><p style="color:#888;font-size:0.85rem;font-style:italic;">Loading...</p></div>
+        </div>
+        <div class="activity-card">
+          <h4>Quick Actions</h4>
+          <div class="quick-actions">
+            <a href="/dashboards/clientManagement.html" class="quick-action-link">&#128101; Manage Clients</a>
+            <a href="/dashboards/prakritiManagement.html" class="quick-action-link">&#127807; Review Assessments</a>
+            <a href="/dashboards/dietManagement.html" class="quick-action-link">&#129367; Assign Diet Plans</a>
+            <a href="/dashboards/yogaManagement.html" class="quick-action-link">&#129496; Manage Yoga Sessions</a>
+            <a href="/dashboards/contentManagement.html" class="quick-action-link">&#11088; Upload Content</a>
+            <a href="/dashboards/analytics.html" class="quick-action-link">&#128200; View Analytics</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/adminDashboard.js"></script>
+  <script>
+    // Load total clients and premium users counts (handled separately from adminDashboard.js stats)
+    fetch('/api/admin/clients', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(clients) {
+        var paid = clients.filter(function(c) { return c.membership_type === 'paid'; });
+        document.getElementById('total-clients-count').textContent = clients.length;
+        document.getElementById('premium-users-count').textContent = paid.length;
+        var el = document.getElementById('recent-clients-list');
+        if (!clients.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem;font-style:italic;">No clients yet.</p>'; return; }
+        el.innerHTML = clients.slice(0, 5).map(function(c) {
+          var badge = c.membership_type === 'paid'
+            ? '<span style="color:#155724;font-size:0.75rem;font-weight:600;">Paid</span>'
+            : '<span style="color:#888;font-size:0.75rem;">Free</span>';
+          return '<div class="activity-item"><span>' + (c.name || c.email) + '</span>' + badge + '</div>';
+        }).join('');
+      })
+      .catch(function() {});
+
+    fetch('/api/admin/prakriti/pending', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(rows) {
+        var el = document.getElementById('recent-assessments-list');
+        if (!rows.length) { el.innerHTML = '<p style="color:#888;font-size:0.85rem;font-style:italic;">No pending assessments.</p>'; return; }
+        el.innerHTML = rows.slice(0, 5).map(function(r) {
+          return '<div class="activity-item"><span>' + (r.client_name || r.client_email) + '</span>' +
+            '<span class="badge badge-' + (r.dominant_type || 'pending') + '" style="font-size:0.72rem;">' + (r.dominant_type || 'pending') + '</span></div>';
+        }).join('');
+      })
+      .catch(function() {});
+  </script>
+</body>
+</html>
