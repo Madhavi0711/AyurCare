@@ -1,8 +1,37 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
+
+// ── Auto-initialize database schema on startup ──────────────────────────────
+async function initDatabase() {
+  const { pool } = require('./db');
+  const bcrypt = require('bcryptjs');
+  try {
+    const schemaPath = path.join(__dirname, 'schema.sql');
+    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+    await pool.query(schemaSql);
+    console.log('✓ Database schema initialized');
+
+    // Seed default users if they don't exist
+    const adminHash  = await bcrypt.hash('admin123', 10);
+    const clientHash = await bcrypt.hash('client123', 10);
+    const goldHash   = await bcrypt.hash('gold123', 10);
+    const platHash   = await bcrypt.hash('plat123', 10);
+
+    await pool.query(`INSERT INTO users (name, email, password, role) VALUES ('Admin', 'admin@ayurcare.com', $1, 'admin') ON CONFLICT (email) DO NOTHING`, [adminHash]);
+    await pool.query(`INSERT INTO users (name, email, password, role, membership_type, membership_tier) VALUES ('Demo Client', 'client@ayurcare.com', $1, 'client', 'free', 'free') ON CONFLICT (email) DO NOTHING`, [clientHash]);
+    await pool.query(`INSERT INTO users (name, email, password, role, membership_type, membership_tier) VALUES ('Gold User', 'gold@ayurcare.com', $1, 'client', 'paid', 'gold') ON CONFLICT (email) DO NOTHING`, [goldHash]);
+    await pool.query(`INSERT INTO users (name, email, password, role, membership_type, membership_tier) VALUES ('Platinum User', 'platinum@ayurcare.com', $1, 'client', 'paid', 'platinum') ON CONFLICT (email) DO NOTHING`, [platHash]);
+    console.log('✓ Default users ready');
+  } catch (err) {
+    console.error('Database init error:', err.message);
+  }
+}
+
+initDatabase();
 
 // Body parsing middleware
 app.use(express.json());
