@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Requests — AYURCARE Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/client-init.js"></script>
+  <style>
+    .pr-wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 64px; }
+    .pr-header { margin-bottom: 28px; }
+    .pr-header h2 { color: #5a3e28; font-family: Georgia, serif; margin-bottom: 4px; }
+    .pr-header p { color: #7a6a55; font-size: 0.9rem; }
+    .pr-filter { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .pr-filter-btn { padding: 7px 18px; border: 1px solid #e8d5a3; border-radius: 20px; background: #fff; color: #5a3e28; font-size: 0.85rem; cursor: pointer; }
+    .pr-filter-btn.active { background: #5a3e28; color: #fdf6ec; border-color: #5a3e28; }
+    .pr-table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: #5a3e28; color: #fdf6ec; padding: 12px 14px; text-align: left; font-weight: 600; }
+    td { padding: 12px 14px; border-bottom: 1px solid #e8d5a3; color: #3b2a1a; vertical-align: top; }
+    tr:hover td { background: #fdf6ec; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+    .badge.pending  { background: #fff3cd; color: #856404; }
+    .badge.approved { background: #d4edda; color: #155724; }
+    .badge.rejected { background: #f8d7da; color: #721c24; }
+    .badge.gold     { background: #fff3cd; color: #b8860b; }
+    .badge.platinum { background: #e2d9f3; color: #3d1a78; }
+    .pr-actions { display: flex; gap: 8px; }
+    .btn-approve { padding: 6px 14px; background: #28a745; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.82rem; }
+    .btn-reject  { padding: 6px 14px; background: #dc3545; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.82rem; }
+    .btn-approve:hover { background: #218838; }
+    .btn-reject:hover  { background: #c82333; }
+    .pr-empty { text-align: center; color: #7a6a55; padding: 40px; font-style: italic; }
+    .pr-loading { text-align: center; color: #7a6a55; padding: 40px; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 14px; padding: 32px; max-width: 420px; width: 90%; }
+    .modal-box h3 { color: #5a3e28; font-family: Georgia, serif; margin-bottom: 16px; }
+    .modal-box textarea { width: 100%; padding: 10px; border: 1px solid #e8d5a3; border-radius: 8px; font-size: 0.9rem; resize: vertical; box-sizing: border-box; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+    .modal-cancel { padding: 8px 20px; background: #f5f0e8; color: #5a3e28; border: 1px solid #e8d5a3; border-radius: 6px; cursor: pointer; }
+    .modal-confirm { padding: 8px 20px; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .modal-confirm.approve { background: #28a745; }
+    .modal-confirm.reject  { background: #dc3545; }
+  </style>
+</head>
+<body class="main-content" style="background:#f9f5ef;min-height:100vh;">
+
+  <div class="pr-wrap">
+    <div class="pr-header">
+      <h2>💳 Payment Requests</h2>
+      <p>Review and approve or reject user payment requests for tier upgrades.</p>
+    </div>
+
+    <div class="pr-filter">
+      <button class="pr-filter-btn active" data-status="">All</button>
+      <button class="pr-filter-btn" data-status="pending">Pending</button>
+      <button class="pr-filter-btn" data-status="approved">Approved</button>
+      <button class="pr-filter-btn" data-status="rejected">Rejected</button>
+    </div>
+
+    <div id="pr-status-msg" style="display:none;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:0.9rem;"></div>
+
+    <div class="pr-table-wrap">
+      <div id="pr-loading" class="pr-loading">Loading payment requests...</div>
+      <table id="pr-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Tier</th>
+            <th>Transaction ID</th>
+            <th>Platform</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pr-tbody"></tbody>
+      </table>
+      <div id="pr-empty" class="pr-empty" style="display:none;">No payment requests found.</div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal-box">
+      <h3 id="modal-title">Confirm Action</h3>
+      <p id="modal-desc" style="color:#7a6a55;font-size:0.9rem;margin-bottom:12px;"></p>
+      <label style="font-size:0.85rem;color:#5a3e28;font-weight:600;display:block;margin-bottom:6px;">Admin Note (optional)</label>
+      <textarea id="modal-note" rows="3" placeholder="Add a note for the user..."></textarea>
+      <div class="modal-actions">
+        <button class="modal-cancel" id="modal-cancel">Cancel</button>
+        <button class="modal-confirm" id="modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var allRequests = [];
+    var currentFilter = '';
+    var pendingAction = null; // { id, action }
+
+    function fmtDate(iso) {
+      try { return new Date(iso).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' }); }
+      catch(e) { return iso; }
+    }
+
+    function escHtml(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function showMsg(msg, type) {
+      var el = document.getElementById('pr-status-msg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.style.background = type === 'success' ? '#d4edda' : '#f8d7da';
+      el.style.color = type === 'success' ? '#155724' : '#721c24';
+      el.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : '#f5c6cb');
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    function renderTable(requests) {
+      var tbody = document.getElementById('pr-tbody');
+      var table = document.getElementById('pr-table');
+      var empty = document.getElementById('pr-empty');
+      if (!requests.length) {
+        table.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+      table.style.display = 'table';
+      empty.style.display = 'none';
+      tbody.innerHTML = requests.map(function(r) {
+        var actions = r.status === 'pending'
+          ? '<div class="pr-actions"><button class="btn-approve" data-id="' + r.id + '" data-action="approve">Approve</button><button class="btn-reject" data-id="' + r.id + '" data-action="reject">Reject</button></div>'
+          : '<span style="color:#7a6a55;font-size:0.82rem;">' + (r.admin_note ? escHtml(r.admin_note) : '—') + '</span>';
+        return '<tr>' +
+          '<td>' + r.id + '</td>' +
+          '<td><strong>' + escHtml(r.user_name) + '</strong><br><span style="color:#7a6a55;font-size:0.78rem;">' + escHtml(r.user_email) + '</span></td>' +
+          '<td><span class="badge ' + r.requested_tier + '">' + r.requested_tier + '</span></td>' +
+          '<td style="font-family:monospace;">' + escHtml(r.transaction_id) + '</td>' +
+          '<td>' + escHtml(r.payment_platform) + '</td>' +
+          '<td>' + (r.amount ? '₹' + r.amount : '—') + '</td>' +
+          '<td><span class="badge ' + r.status + '">' + r.status + '</span></td>' +
+          '<td>' + fmtDate(r.created_at) + '</td>' +
+          '<td>' + actions + '</td>' +
+          '</tr>';
+      }).join('');
+
+      // Bind action buttons
+      tbody.querySelectorAll('[data-action]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          pendingAction = { id: parseInt(btn.dataset.id), action: btn.dataset.action };
+          var modal = document.getElementById('confirm-modal');
+          var title = document.getElementById('modal-title');
+          var desc  = document.getElementById('modal-desc');
+          var confirm = document.getElementById('modal-confirm');
+          var req = requests.find(function(r) { return r.id === pendingAction.id; });
+          if (btn.dataset.action === 'approve') {
+            title.textContent = 'Approve Payment Request';
+            desc.textContent = 'Approve payment from ' + (req ? req.user_name : '') + ' and upgrade to ' + (req ? req.requested_tier : '') + '?';
+            confirm.className = 'modal-confirm approve';
+            confirm.textContent = 'Approve';
+          } else {
+            title.textContent = 'Reject Payment Request';
+            desc.textContent = 'Reject payment request from ' + (req ? req.user_name : '') + '?';
+            confirm.className = 'modal-confirm reject';
+            confirm.textContent = 'Reject';
+          }
+          document.getElementById('modal-note').value = '';
+          modal.classList.add('open');
+        });
+      });
+    }
+
+    function loadRequests() {
+      fetch('/api/payment/requests', { credentials: 'include' })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/dashboards/adminDashboard.html'; return null; }
+          return r.ok ? r.json() : null;
+        })
+        .then(function(data) {
+          document.getElementById('pr-loading').style.display = 'none';
+          if (!data) return;
+          allRequests = data;
+          applyFilter();
+        })
+        .catch(function() { document.getElementById('pr-loading').textContent = 'Failed to load requests.'; });
+    }
+
+    function applyFilter() {
+      var filtered = currentFilter ? allRequests.filter(function(r) { return r.status === currentFilter; }) : allRequests;
+      renderTable(filtered);
+    }
+
+    document.querySelectorAll('.pr-filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.pr-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = btn.dataset.status;
+        applyFilter();
+      });
+    });
+
+    // Modal
+    document.getElementById('modal-cancel').addEventListener('click', function() {
+      document.getElementById('confirm-modal').classList.remove('open');
+      pendingAction = null;
+    });
+
+    document.getElementById('modal-confirm').addEventListener('click', function() {
+      if (!pendingAction) return;
+      var note = document.getElementById('modal-note').value.trim();
+      var url = '/api/payment/requests/' + pendingAction.id + '/' + pendingAction.action;
+      fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_note: note }),
+      })
+        .then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); })
+        .then(function(res) {
+          document.getElementById('confirm-modal').classList.remove('open');
+          if (res.ok) {
+            showMsg(res.j.message || 'Done', 'success');
+            loadRequests();
+          } else {
+            showMsg(res.j.error || 'Action failed', 'error');
+          }
+        })
+        .catch(function() { showMsg('Network error', 'error'); });
+    });
+
+    loadRequests();
+  </script>
+</body>
+</html>

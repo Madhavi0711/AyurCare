@@ -3,23 +3,241 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Profile &amp; Health Details - AYURCARE</title>
+  <title>My Profile — AYURCARE</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/wellness.css" />
   <script src="../js/client-init.js"></script>
-</head>
-<body class="wellness-page">
+  <style>
+    body { background: #FFFDF1; }
 
+    .pf-wrap { max-width: 760px; margin: 0 auto; padding: 36px 20px 64px; }
+
+    /* ── Cover + Avatar ── */
+    .pf-cover {
+      height: 160px;
+      background: linear-gradient(135deg, #562F00 0%, #7a4a1e 50%, #FF9644 100%);
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+    .pf-avatar-wrap {
+      position: absolute;
+      bottom: -44px;
+      left: 32px;
+    }
+    .pf-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #FF9644;
+      border: 4px solid #FFFDF1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #562F00;
+      font-family: Georgia, serif;
+      box-shadow: 0 4px 16px rgba(86,47,0,0.2);
+    }
+
+    /* ── Profile card ── */
+    .pf-card {
+      background: #fff;
+      border: 1px solid #FFCE99;
+      border-radius: 0 0 16px 16px;
+      padding: 60px 32px 32px;
+      box-shadow: 0 4px 20px rgba(86,47,0,0.07);
+    }
+    .pf-name-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+    .pf-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #562F00;
+      font-family: Georgia, serif;
+    }
+    .pf-email { font-size: 0.88rem; color: #8B5E3C; margin-bottom: 12px; }
+    .pf-tier-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pf-tier-badge.free     { background: #f0e8dc; color: #562F00; }
+    .pf-tier-badge.gold     { background: #fff3cd; color: #b8860b; }
+    .pf-tier-badge.platinum { background: #e2d9f3; color: #3d1a78; }
+
+    .pf-edit-btn {
+      padding: 9px 22px;
+      background: #562F00;
+      color: #FFFDF1;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .pf-edit-btn:hover { background: #7a4a1e; }
+
+    .pf-divider { border: none; border-top: 1px solid #FFCE99; margin: 20px 0; }
+
+    /* ── View mode grid ── */
+    .pf-view-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .pf-field {
+      background: #FFFDF1;
+      border: 1px solid #FFCE99;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .pf-field-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #8B5E3C;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .pf-field-value {
+      font-size: 0.95rem;
+      color: #562F00;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .pf-field-value.empty { color: #FFCE99; font-style: italic; font-size: 0.85rem; }
+    .pf-field.full { grid-column: 1 / -1; }
+
+    /* ── Edit mode ── */
+    .pf-edit-section { display: none; }
+    .pf-edit-section.active { display: block; }
+    .pf-view-section.hidden { display: none; }
+
+    .pf-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8B5E3C;
+      margin: 24px 0 14px;
+    }
+    .pf-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .pf-form-group { display: flex; flex-direction: column; gap: 5px; }
+    .pf-form-group.full { grid-column: 1 / -1; }
+    .pf-form-group label { font-size: 0.82rem; font-weight: 600; color: #562F00; }
+    .pf-form-group input,
+    .pf-form-group textarea,
+    .pf-form-group select {
+      padding: 10px 13px;
+      border: 1px solid #FFCE99;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: #562F00;
+      background: #FFFDF1;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .pf-form-group input:focus,
+    .pf-form-group textarea:focus {
+      outline: none;
+      border-color: #FF9644;
+      background: #fff;
+    }
+    .pf-form-group input[readonly] { background: #f5f0e8; color: #8B5E3C; cursor: not-allowed; }
+    .pf-form-group textarea { resize: vertical; }
+
+    .pf-action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .pf-save-btn {
+      padding: 11px 28px;
+      background: #FF9644;
+      color: #562F00;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .pf-save-btn:hover { background: #e8832e; }
+    .pf-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .pf-cancel-btn {
+      padding: 11px 22px;
+      background: #f5f0e8;
+      color: #562F00;
+      border: 1px solid #FFCE99;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+    .pf-cancel-btn:hover { background: #FFCE99; }
+
+    .pf-status {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .pf-status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .pf-status.error   { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    /* ── Stats row ── */
+    .pf-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .pf-stat-box {
+      background: #FFFDF1;
+      border: 1px solid #FFCE99;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .pf-stat-num { font-size: 1.4rem; font-weight: 700; color: #FF9644; font-family: Georgia, serif; }
+    .pf-stat-lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8B5E3C; margin-top: 2px; }
+
+    @media (max-width: 600px) {
+      .pf-view-grid, .pf-form-grid { grid-template-columns: 1fr; }
+      .pf-field.full, .pf-form-group.full { grid-column: 1; }
+      .pf-stats-row { grid-template-columns: 1fr 1fr; }
+      .pf-card { padding: 56px 18px 24px; }
+      .pf-avatar-wrap { left: 18px; }
+    }
+  </style>
+</head>
+<body>
   <header class="sp-navbar">
     <div class="sp-navbar-inner">
       <a href="/dashboards/patientDashboard.html" class="sp-logo">
         <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
         <span class="sp-logo-text">AYURCARE</span>
       </a>
-      <nav class="sp-nav" aria-label="Main navigation">
+      <nav class="sp-nav">
         <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
         <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
-        <a href="/dashboards/treatments.html" class="sp-nav-link">Treatments</a>
         <a href="/dashboards/dietPlan.html" class="sp-nav-link">Diet Plan</a>
         <a href="/dashboards/yogaPlans.html" class="sp-nav-link">Yoga Plans</a>
         <a href="/dashboards/premiumContent.html" class="sp-nav-link">Premium</a>
@@ -28,11 +246,11 @@
         <span class="sp-user-name" id="nav-user-name"></span>
         <div class="sp-user-dropdown" style="position:relative;">
           <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
-          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
-            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
-            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
-            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans &amp; Payment</a>
-            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #FFCE99;border-radius:10px;box-shadow:0 4px 16px rgba(86,47,0,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#562F00;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/settings.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#562F00;text-decoration:none;font-family:Georgia,serif;">&#9881; Settings</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#562F00;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans</a>
+            <hr style="border:none;border-top:1px solid #FFCE99;margin:4px 0;" />
             <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
           </div>
         </div>
@@ -53,11 +271,10 @@
     </div>
     <nav class="sp-drawer-nav">
       <a href="/dashboards/patientDashboard.html" class="sp-drawer-link">Dashboard</a>
-      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti Assessment</a>
-      <a href="/dashboards/treatments.html" class="sp-drawer-link">Treatments</a>
+      <a href="/dashboards/prakritiTest.html" class="sp-drawer-link">Prakriti</a>
       <a href="/dashboards/dietPlan.html" class="sp-drawer-link">Diet Plan</a>
       <a href="/dashboards/yogaPlans.html" class="sp-drawer-link">Yoga Plans</a>
-      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium Content</a>
+      <a href="/dashboards/premiumContent.html" class="sp-drawer-link">Premium</a>
       <a href="/dashboards/plans.html" class="sp-drawer-link">Plans &amp; Payment</a>
       <a href="/dashboards/profile.html" class="sp-drawer-link active">Profile</a>
       <a href="/dashboards/settings.html" class="sp-drawer-link">Settings</a>
@@ -68,112 +285,123 @@
   </div>
   <div class="sp-overlay" id="sp-overlay"></div>
 
-  <main class="sp-content">
-    <div class="sp-page-banner" style="background-image:url('/images/ayur-bg.avif');"></div>
+  <main class="pf-wrap">
+    <div id="pf-status" class="pf-status"></div>
 
-    <div class="two-col-grid" style="align-items:start;">
-
-      <!-- ── Profile Form ─────────────────────────────────────── -->
-      <div>
-        <h2 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:4px;">Profile &amp; Health Details</h2>
-        <p style="color:#7a6a55;font-size:0.9rem;margin-bottom:24px;">Fill in your health information. This helps us personalise your Ayurvedic recommendations.</p>
-
-        <p id="form-status" class="status-msg" style="display:none;" role="alert"></p>
-
-        <div class="section-card">
-          <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:20px;font-size:1rem;">Account Information</h3>
-          <div class="form-group">
-            <label for="acc-name">Full Name</label>
-            <input type="text" id="acc-name" placeholder="Your full name" />
-          </div>
-          <div class="form-group">
-            <label for="acc-email">Email</label>
-            <input type="email" id="acc-email" readonly style="background:#f5f0e8;color:#7a6a55;" />
-          </div>
-          <button class="btn-primary" id="save-name-btn" style="margin-top:4px;">Update Name</button>
-        </div>
-
-        <div class="section-card" style="margin-top:20px;">
-          <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:20px;font-size:1rem;">Health Profile</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <div class="form-group">
-              <label for="hp-age">Age (years)</label>
-              <input type="number" id="hp-age" min="1" max="120" placeholder="e.g. 28" />
-            </div>
-            <div class="form-group">
-              <label for="hp-height">Height (cm)</label>
-              <input type="number" id="hp-height" min="50" max="250" step="0.1" placeholder="e.g. 165" />
-            </div>
-            <div class="form-group">
-              <label for="hp-weight">Weight (kg)</label>
-              <input type="number" id="hp-weight" min="10" max="300" step="0.1" placeholder="e.g. 62" />
-            </div>
-            <div class="form-group">
-              <label>BMI</label>
-              <input type="text" id="hp-bmi" readonly style="background:#f5f0e8;color:#7a6a55;" placeholder="Auto-calculated" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="hp-issues">Health Issues / Conditions</label>
-            <textarea id="hp-issues" rows="3" placeholder="e.g. Diabetes, hypertension, back pain, digestive issues..."></textarea>
-          </div>
-          <div class="form-group">
-            <label for="hp-complaints">Current Complaints</label>
-            <textarea id="hp-complaints" rows="3" placeholder="e.g. Fatigue, poor sleep, stress, joint pain..."></textarea>
-          </div>
-          <button class="btn-primary" id="save-health-btn">Save Health Profile</button>
-        </div>
+    <!-- Cover + Avatar -->
+    <div class="pf-cover">
+      <div class="pf-avatar-wrap">
+        <div class="pf-avatar" id="pf-avatar">?</div>
       </div>
-
-      <!-- ── Live Preview Card ────────────────────────────────── -->
-      <div>
-        <h3 style="color:var(--color-brown);font-family:Georgia,serif;margin-bottom:16px;font-size:1rem;">Your Health Summary</h3>
-        <div id="profile-preview" class="section-card" style="background:linear-gradient(135deg,#fdf6ec,#fff8f0);">
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
-            <div style="width:56px;height:56px;border-radius:50%;background:var(--color-light-brown);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;font-family:Georgia,serif;font-weight:700;" id="preview-avatar">?</div>
-            <div>
-              <p id="preview-name" style="font-size:1.1rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
-              <p id="preview-email" style="font-size:0.82rem;color:#7a6a55;margin:0;"></p>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
-              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Age</p>
-              <p id="preview-age" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
-            </div>
-            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
-              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">BMI</p>
-              <p id="preview-bmi" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
-            </div>
-            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
-              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Height</p>
-              <p id="preview-height" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
-            </div>
-            <div style="background:#fff;border:1px solid #e8d5a3;border-radius:8px;padding:12px;text-align:center;">
-              <p style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 4px;">Weight</p>
-              <p id="preview-weight" style="font-size:1.2rem;font-weight:700;color:var(--color-brown);margin:0;font-family:Georgia,serif;">—</p>
-            </div>
-          </div>
-          <div style="margin-bottom:12px;">
-            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Health Issues</p>
-            <p id="preview-issues" style="font-size:0.88rem;color:var(--color-text);margin:0;line-height:1.5;">—</p>
-          </div>
-          <div>
-            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Current Complaints</p>
-            <p id="preview-complaints" style="font-size:0.88rem;color:var(--color-text);margin:0;line-height:1.5;">—</p>
-          </div>
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e8d5a3;">
-            <p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#7a6a55;margin:0 0 6px;">Membership</p>
-            <p id="preview-membership" style="font-size:0.88rem;font-weight:600;color:var(--color-brown);margin:0;">—</p>
-          </div>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Profile Card -->
+    <div class="pf-card">
+      <div class="pf-name-row">
+        <div>
+          <div class="pf-name" id="pf-display-name">—</div>
+          <div class="pf-email" id="pf-display-email"></div>
+          <span class="pf-tier-badge free" id="pf-tier-badge">Free Plan</span>
+        </div>
+        <button class="pf-edit-btn" id="pf-edit-btn">✏️ Edit Profile</button>
+      </div>
+
+      <hr class="pf-divider" />
+
+      <!-- Stats row -->
+      <div class="pf-stats-row">
+        <div class="pf-stat-box">
+          <div class="pf-stat-num" id="stat-bmi">—</div>
+          <div class="pf-stat-lbl">BMI</div>
+        </div>
+        <div class="pf-stat-box">
+          <div class="pf-stat-num" id="stat-age">—</div>
+          <div class="pf-stat-lbl">Age</div>
+        </div>
+        <div class="pf-stat-box">
+          <div class="pf-stat-num" id="stat-prakriti">—</div>
+          <div class="pf-stat-lbl">Prakriti</div>
+        </div>
+      </div>
+
+      <hr class="pf-divider" />
+
+      <!-- ── VIEW MODE ── -->
+      <div id="pf-view-section" class="pf-view-section">
+        <p class="pf-section-title">Health Information</p>
+        <div class="pf-view-grid">
+          <div class="pf-field">
+            <div class="pf-field-label">Height</div>
+            <div class="pf-field-value" id="v-height"><span class="empty">Not set</span></div>
+          </div>
+          <div class="pf-field">
+            <div class="pf-field-label">Weight</div>
+            <div class="pf-field-value" id="v-weight"><span class="empty">Not set</span></div>
+          </div>
+          <div class="pf-field full">
+            <div class="pf-field-label">Health Issues / Conditions</div>
+            <div class="pf-field-value" id="v-issues"><span class="empty">Not specified</span></div>
+          </div>
+          <div class="pf-field full">
+            <div class="pf-field-label">Current Complaints</div>
+            <div class="pf-field-value" id="v-complaints"><span class="empty">Not specified</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── EDIT MODE ── -->
+      <div id="pf-edit-section" class="pf-edit-section">
+        <p class="pf-section-title">Account</p>
+        <div class="pf-form-grid">
+          <div class="pf-form-group">
+            <label for="e-name">Full Name</label>
+            <input type="text" id="e-name" placeholder="Your full name" />
+          </div>
+          <div class="pf-form-group">
+            <label>Email</label>
+            <input type="email" id="e-email" readonly />
+          </div>
+        </div>
+
+        <p class="pf-section-title">Health Details</p>
+        <div class="pf-form-grid">
+          <div class="pf-form-group">
+            <label for="e-age">Age (years)</label>
+            <input type="number" id="e-age" min="1" max="120" placeholder="e.g. 28" />
+          </div>
+          <div class="pf-form-group">
+            <label for="e-height">Height (cm)</label>
+            <input type="number" id="e-height" min="50" max="250" step="0.1" placeholder="e.g. 165" />
+          </div>
+          <div class="pf-form-group">
+            <label for="e-weight">Weight (kg)</label>
+            <input type="number" id="e-weight" min="10" max="300" step="0.1" placeholder="e.g. 62" />
+          </div>
+          <div class="pf-form-group">
+            <label>BMI (auto)</label>
+            <input type="text" id="e-bmi" readonly placeholder="Auto-calculated" />
+          </div>
+          <div class="pf-form-group full">
+            <label for="e-issues">Health Issues / Conditions</label>
+            <textarea id="e-issues" rows="3" placeholder="e.g. Diabetes, hypertension, back pain..."></textarea>
+          </div>
+          <div class="pf-form-group full">
+            <label for="e-complaints">Current Complaints</label>
+            <textarea id="e-complaints" rows="3" placeholder="e.g. Fatigue, poor sleep, stress..."></textarea>
+          </div>
+        </div>
+
+        <div class="pf-action-row">
+          <button class="pf-save-btn" id="pf-save-btn">Save Profile</button>
+          <button class="pf-cancel-btn" id="pf-cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+    </div><!-- /.pf-card -->
   </main>
 
   <script>
-    // Nav dropdown
+    // Nav
     var avatarBtn = document.getElementById('avatar-btn');
     var spDropdown = document.getElementById('sp-dropdown');
     if (avatarBtn) {
@@ -183,13 +411,9 @@
         spDropdown.style.display = open ? 'none' : 'block';
         avatarBtn.setAttribute('aria-expanded', String(!open));
       });
-      document.addEventListener('click', function() {
-        spDropdown.style.display = 'none';
-        avatarBtn.setAttribute('aria-expanded', 'false');
-      });
+      document.addEventListener('click', function() { spDropdown.style.display = 'none'; });
     }
-    // Drawer
-    var drawer  = document.getElementById('sp-drawer');
+    var drawer = document.getElementById('sp-drawer');
     var overlay = document.getElementById('sp-overlay');
     function openDrawer()  { drawer.classList.add('open');    overlay.classList.add('active');    document.getElementById('hamburger-btn').setAttribute('aria-expanded','true'); }
     function closeDrawer() { drawer.classList.remove('open'); overlay.classList.remove('active'); document.getElementById('hamburger-btn').setAttribute('aria-expanded','false'); }
@@ -200,112 +424,172 @@
     document.getElementById('logout-btn').addEventListener('click', doLogout);
     document.getElementById('drawer-logout-btn').addEventListener('click', doLogout);
 
-    function showStatus(msg, type) {
-      var el = document.getElementById('form-status');
-      el.textContent = msg; el.className = 'status-msg ' + (type||'info'); el.style.display = 'block';
-      setTimeout(function(){ el.style.display='none'; }, 4000);
-    }
+    // ── State ──────────────────────────────────────────────────────
+    var profileData = {};
+    var healthData  = {};
 
     function calcBMI(h, w) {
-      if (!h || !w || h <= 0) return '—';
-      var bmi = (w / ((h/100) * (h/100))).toFixed(1);
-      return bmi;
+      if (!h || !w || h <= 0) return null;
+      return (w / ((h / 100) * (h / 100))).toFixed(1);
     }
 
-    function updatePreview() {
-      var name = document.getElementById('acc-name').value.trim();
-      var age  = document.getElementById('hp-age').value;
-      var h    = parseFloat(document.getElementById('hp-height').value);
-      var w    = parseFloat(document.getElementById('hp-weight').value);
-      var issues     = document.getElementById('hp-issues').value.trim();
-      var complaints = document.getElementById('hp-complaints').value.trim();
+    function showStatus(msg, type) {
+      var el = document.getElementById('pf-status');
+      el.textContent = msg;
+      el.className = 'pf-status ' + type;
+      el.style.display = 'block';
+      setTimeout(function() { el.style.display = 'none'; }, 4000);
+    }
+
+    function val(v, suffix) {
+      return v ? (v + (suffix || '')) : null;
+    }
+
+    // ── Render view mode ───────────────────────────────────────────
+    function renderView() {
+      var name = profileData.name || '—';
+      document.getElementById('pf-display-name').textContent = name;
+      document.getElementById('pf-display-email').textContent = profileData.email || '';
+      document.getElementById('nav-user-name').textContent = name;
+      document.getElementById('pf-avatar').textContent = name.charAt(0).toUpperCase() || '?';
+
+      // Tier badge
+      var tier = profileData.membership_tier || 'free';
+      var tierLabels = { free: 'Free Plan', gold: '⭐ Gold', platinum: '💎 Platinum' };
+      var badge = document.getElementById('pf-tier-badge');
+      badge.textContent = tierLabels[tier] || 'Free Plan';
+      badge.className = 'pf-tier-badge ' + tier;
+
+      // Stats
+      var bmi = calcBMI(healthData.height_cm, healthData.weight_kg);
+      document.getElementById('stat-bmi').textContent = bmi || '—';
+      document.getElementById('stat-age').textContent = healthData.age ? healthData.age + ' yrs' : '—';
+
+      // Health fields
+      function setField(id, v, suffix) {
+        var el = document.getElementById(id);
+        if (v) {
+          el.innerHTML = v + (suffix || '');
+        } else {
+          el.innerHTML = '<span class="empty">Not set</span>';
+        }
+      }
+      setField('v-height', healthData.height_cm, ' cm');
+      setField('v-weight', healthData.weight_kg, ' kg');
+      setField('v-issues', healthData.health_issues);
+      setField('v-complaints', healthData.complaints);
+    }
+
+    // ── Switch to edit mode ────────────────────────────────────────
+    function enterEditMode() {
+      document.getElementById('pf-view-section').classList.add('hidden');
+      document.getElementById('pf-edit-section').classList.add('active');
+      document.getElementById('pf-edit-btn').style.display = 'none';
+
+      document.getElementById('e-name').value    = profileData.name  || '';
+      document.getElementById('e-email').value   = profileData.email || '';
+      document.getElementById('e-age').value     = healthData.age        || '';
+      document.getElementById('e-height').value  = healthData.height_cm  || '';
+      document.getElementById('e-weight').value  = healthData.weight_kg  || '';
+      document.getElementById('e-issues').value  = healthData.health_issues || '';
+      document.getElementById('e-complaints').value = healthData.complaints || '';
+      updateBmiField();
+    }
+
+    function exitEditMode() {
+      document.getElementById('pf-view-section').classList.remove('hidden');
+      document.getElementById('pf-edit-section').classList.remove('active');
+      document.getElementById('pf-edit-btn').style.display = '';
+    }
+
+    function updateBmiField() {
+      var h = parseFloat(document.getElementById('e-height').value);
+      var w = parseFloat(document.getElementById('e-weight').value);
       var bmi = calcBMI(h, w);
-
-      document.getElementById('preview-name').textContent    = name || '—';
-      document.getElementById('preview-avatar').textContent  = name ? name.charAt(0).toUpperCase() : '?';
-      document.getElementById('preview-age').textContent     = age ? age + ' yrs' : '—';
-      document.getElementById('preview-height').textContent  = h ? h + ' cm' : '—';
-      document.getElementById('preview-weight').textContent  = w ? w + ' kg' : '—';
-      document.getElementById('preview-bmi').textContent     = bmi;
-      document.getElementById('hp-bmi').value                = bmi !== '—' ? bmi : '';
-      document.getElementById('preview-issues').textContent     = issues || '—';
-      document.getElementById('preview-complaints').textContent = complaints || '—';
+      document.getElementById('e-bmi').value = bmi || '';
     }
 
-    ['acc-name','hp-age','hp-height','hp-weight','hp-issues','hp-complaints'].forEach(function(id) {
-      document.getElementById(id).addEventListener('input', updatePreview);
+    ['e-height', 'e-weight'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', updateBmiField);
     });
 
-    // Load existing data
-    fetch('/api/client/profile', { credentials: 'include' })
-      .then(function(r) { return r.ok ? r.json() : null; })
-      .then(function(u) {
-        if (!u) return;
-        document.getElementById('acc-name').value  = u.name  || '';
-        document.getElementById('acc-email').value = u.email || '';
-        document.getElementById('nav-user-name').textContent = u.name || '';
-        document.getElementById('preview-email').textContent = u.email || '';
-        var tier = u.membership_tier || 'free';
-        var tierLabels = { free: 'Free Plan', gold: '⭐ Gold Member', platinum: '💎 Platinum Member' };
-        document.getElementById('preview-membership').textContent = tierLabels[tier] || 'Free Plan';
-        updatePreview();
-      }).catch(function(){});
+    document.getElementById('pf-edit-btn').addEventListener('click', enterEditMode);
+    document.getElementById('pf-cancel-btn').addEventListener('click', function() {
+      exitEditMode();
+    });
 
-    fetch('/api/client/health-profile', { credentials: 'include' })
-      .then(function(r) { return r.ok ? r.json() : null; })
-      .then(function(p) {
-        if (!p) return;
-        if (p.age)           document.getElementById('hp-age').value       = p.age;
-        if (p.height_cm)     document.getElementById('hp-height').value    = p.height_cm;
-        if (p.weight_kg)     document.getElementById('hp-weight').value    = p.weight_kg;
-        if (p.health_issues) document.getElementById('hp-issues').value    = p.health_issues;
-        if (p.complaints)    document.getElementById('hp-complaints').value = p.complaints;
-        updatePreview();
-      }).catch(function(){});
+    // ── Save ───────────────────────────────────────────────────────
+    document.getElementById('pf-save-btn').addEventListener('click', function() {
+      var btn = document.getElementById('pf-save-btn');
+      btn.disabled = true; btn.textContent = 'Saving…';
 
-    // Save name
-    document.getElementById('save-name-btn').addEventListener('click', function() {
-      var name = document.getElementById('acc-name').value.trim();
-      if (!name) { showStatus('Name cannot be empty.', 'error'); return; }
-      var btn = document.getElementById('save-name-btn');
-      btn.disabled = true;
-      fetch('/api/client/profile', {
+      var name = document.getElementById('e-name').value.trim();
+      if (!name) { showStatus('Name cannot be empty.', 'error'); btn.disabled = false; btn.textContent = 'Save Profile'; return; }
+
+      // Save name
+      var p1 = fetch('/api/client/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ name: name })
-      })
-        .then(function(r) { return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
-        .then(function(res) {
-          if (res.ok) { showStatus('Name updated successfully.', 'success'); updatePreview(); }
-          else { showStatus(res.j.error || 'Failed to update name.', 'error'); }
-        })
-        .catch(function(){ showStatus('Network error.', 'error'); })
-        .finally(function(){ btn.disabled = false; });
-    });
+      }).then(function(r) { return r.json(); });
 
-    // Save health profile
-    document.getElementById('save-health-btn').addEventListener('click', function() {
-      var btn = document.getElementById('save-health-btn');
-      btn.disabled = true;
-      fetch('/api/client/health-profile', {
+      // Save health profile
+      var p2 = fetch('/api/client/health-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          age:           document.getElementById('hp-age').value || null,
-          height_cm:     document.getElementById('hp-height').value || null,
-          weight_kg:     document.getElementById('hp-weight').value || null,
-          health_issues: document.getElementById('hp-issues').value.trim(),
-          complaints:    document.getElementById('hp-complaints').value.trim()
+          age:           document.getElementById('e-age').value || null,
+          height_cm:     document.getElementById('e-height').value || null,
+          weight_kg:     document.getElementById('e-weight').value || null,
+          health_issues: document.getElementById('e-issues').value.trim(),
+          complaints:    document.getElementById('e-complaints').value.trim()
         })
-      })
-        .then(function(r) {
-          if (r.ok) { showStatus('Health profile saved successfully.', 'success'); }
-          else { showStatus('Failed to save. Please try again.', 'error'); }
+      }).then(function(r) { return r.json(); });
+
+      Promise.all([p1, p2])
+        .then(function(results) {
+          profileData.name = name;
+          healthData.age           = document.getElementById('e-age').value || null;
+          healthData.height_cm     = document.getElementById('e-height').value || null;
+          healthData.weight_kg     = document.getElementById('e-weight').value || null;
+          healthData.health_issues = document.getElementById('e-issues').value.trim();
+          healthData.complaints    = document.getElementById('e-complaints').value.trim();
+          renderView();
+          exitEditMode();
+          showStatus('Profile saved successfully.', 'success');
         })
-        .catch(function(){ showStatus('Network error.', 'error'); })
-        .finally(function(){ btn.disabled = false; });
+        .catch(function() { showStatus('Failed to save. Please try again.', 'error'); })
+        .finally(function() { btn.disabled = false; btn.textContent = 'Save Profile'; });
+    });
+
+    // ── Load data ──────────────────────────────────────────────────
+    Promise.all([
+      fetch('/api/client/profile', { credentials: 'include' }).then(function(r) { return r.ok ? r.json() : {}; }),
+      fetch('/api/client/health-profile', { credentials: 'include' }).then(function(r) { return r.ok ? r.json() : {}; }),
+      fetch('/api/client/dashboard', { credentials: 'include' }).then(function(r) { return r.ok ? r.json() : {}; })
+    ]).then(function(results) {
+      profileData = results[0] || {};
+      healthData  = results[1] || {};
+      var dash    = results[2] || {};
+
+      // Merge tier from dashboard (most up-to-date)
+      if (dash.membership_tier) profileData.membership_tier = dash.membership_tier;
+
+      // Prakriti stat
+      document.getElementById('stat-prakriti').textContent =
+        dash.prakritiType ? dash.prakritiType.charAt(0).toUpperCase() + dash.prakritiType.slice(1) : '—';
+
+      renderView();
+
+      // If no health data yet, go straight to edit mode
+      var hasHealth = healthData.age || healthData.height_cm || healthData.weight_kg;
+      if (!hasHealth && !profileData.name) {
+        enterEditMode();
+      }
+    }).catch(function() {
+      showStatus('Failed to load profile data.', 'error');
     });
   </script>
 </body>

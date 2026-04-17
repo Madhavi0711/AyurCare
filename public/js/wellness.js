@@ -174,11 +174,11 @@
           statMembership.textContent = data.membership_type === 'paid' ? 'Premium' : 'Free';
         }
 
-        // Notification dot on avatar
+        // Notification dot on bell icon
         var notifDot = document.getElementById('notif-badge-nav');
         if (notifDot) notifDot.hidden = (data.notificationCount === 0);
-        var avatarDot = document.getElementById('avatar-notif-dot');
-        if (avatarDot) avatarDot.style.display = data.notificationCount > 0 ? 'block' : 'none';
+        var bellDot = document.getElementById('notif-bell-dot');
+        if (bellDot) bellDot.style.display = data.notificationCount > 0 ? 'block' : 'none';
 
         // Update prakriti section status block
         updatePrakritiBlock(data);
@@ -322,6 +322,8 @@
               // Update navbar dot
               var notifDot = document.getElementById('notif-badge-nav');
               if (notifDot) notifDot.hidden = true;
+              var bellDot = document.getElementById('notif-bell-dot');
+              if (bellDot) bellDot.style.display = 'none';
               if (dashboardData) dashboardData.notificationCount = 0;
               // Update stat card
               var statNotif = document.getElementById('stat-notif');

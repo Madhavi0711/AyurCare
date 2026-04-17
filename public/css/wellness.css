@@ -5,16 +5,16 @@
 
 /* ── Variables ─────────────────────────────────────────────── */
 :root {
-  --wl-brown:       #5a3e28;
-  --wl-dark-brown:  #3b2a1a;
-  --wl-light-brown: #c8a96e;
-  --wl-beige:       #fdf6ec;
-  --wl-beige-dark:  #f5ead6;
+  --wl-brown:       #562F00;
+  --wl-dark-brown:  #562F00;
+  --wl-light-brown: #FF9644;
+  --wl-beige:       #FFFDF1;
+  --wl-beige-dark:  #FFCE99;
   --wl-white:       #ffffff;
-  --wl-text:        #3b2a1a;
-  --wl-text-muted:  #7a6a55;
+  --wl-text:        #562F00;
+  --wl-text-muted:  #8B5E3C;
   --wl-green:       #4a7c59;
-  --wl-border:      #e8d5a3;
+  --wl-border:      #FFCE99;
   --wl-shadow:      0 2px 16px rgba(90,62,40,0.10);
   --wl-navbar-h:    68px;
 }
@@ -33,16 +33,19 @@
 }
 
 /* ── Navbar ────────────────────────────────────────────────── */
+
+.box-shadow  { 0 1px 8px rgba(90,62,40,0.08);
+  height: var(--wl-navbar-h);
+}
+
 .wl-navbar {
   position: sticky;
   top: 0;
   z-index: 500;
-  background: var(--wl-white);
-  border-bottom: 1px solid var(--wl-border);
-  box-shadow: 0 1px 8px rgba(90,62,40,0.08);
+  background: #4a2704;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   height: var(--wl-navbar-h);
 }
-
 .wl-navbar-inner {
   max-width: 1280px;
   margin: 0 auto;
@@ -82,7 +85,7 @@
 
 .wl-nav-link {
   padding: 8px 14px;
-  color: var(--wl-text-muted);
+  color: rgba(253,246,236,0.82);
   font-size: 0.88rem;
   text-decoration: none;
   border-radius: 6px;
@@ -104,7 +107,7 @@
 
 .wl-user-greeting {
   font-size: 0.88rem;
-  color: var(--wl-text-muted);
+  color: rgba(253,246,236,0.75);
   white-space: nowrap;
 }
 
@@ -936,7 +939,15 @@
     display: flex;
     margin-left: 4px;
   }
-  .wl-navbar-inner {
+  .wl-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: #7a5c3e;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  height: var(--wl-navbar-h);
+}
+.wl-navbar-inner {
     padding: 0 16px;
     gap: 0;
   }
@@ -1074,7 +1085,7 @@
   width: 100%;
   height: 380px;
   border-radius: 14px;
-  background: url('/images/prakritiF.png') center/cover no-repeat;
+  background: url('/images/yoga_asan.webp') center/cover no-repeat;
   background-color: var(--wl-beige-dark);
   box-shadow: var(--wl-shadow);
 }

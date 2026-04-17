@@ -140,3 +140,26 @@ CREATE TABLE IF NOT EXISTS membership_plans (
     created_by  INTEGER REFERENCES users(id),
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS payment_requests (
+    id               SERIAL PRIMARY KEY,
+    user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    requested_tier   VARCHAR(20) NOT NULL CHECK (requested_tier IN ('gold', 'platinum')),
+    transaction_id   VARCHAR(255) NOT NULL,
+    payment_platform VARCHAR(100) NOT NULL,
+    amount           NUMERIC(10,2),
+    status           VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    admin_note       TEXT,
+    reviewed_by      INTEGER REFERENCES users(id),
+    reviewed_at      TIMESTAMPTZ,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id         SERIAL PRIMARY KEY,
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token      VARCHAR(64) NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used       BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

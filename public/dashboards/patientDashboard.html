@@ -1,124 +1,572 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — AYURCARE</title>
+  <title>My Wellness Dashboard — AYURCARE</title>
   <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/wellness.css" />
+  <script src="../js/client-init.js"></script>
+  <style>
+    /* Dropdown stats panel */
+    .wl-dropdown-stats {
+      padding: 12px 16px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .wl-dropdown-stat-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wl-dropdown-stat-icon { font-size: 1rem; width: 24px; text-align: center; flex-shrink: 0; }
+    .wl-dropdown-stat-label { display: block; font-size: 0.72rem; color: #7a6a55; text-transform: uppercase; letter-spacing: 0.5px; }
+    .wl-dropdown-stat-value { display: block; font-size: 0.85rem; font-weight: 600; color: #3b2a1a; }
+    .wl-dropdown-menu { animation: dropdownFadeIn 0.2s ease forwards; transform-origin: top right; }
+    @keyframes dropdownFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(-6px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .wl-hero-content { animation: heroSlideUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    @keyframes heroSlideUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .wl-service-card, .wl-quick-card, .wl-content-card {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+    }
+    .wl-service-card:hover, .wl-quick-card:hover, .wl-content-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(90,62,40,0.14);
+    }
+    #avatar-notif-dot { animation: notifPulse 2s ease-in-out infinite; }
+    @keyframes notifPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.3); opacity: 0.7; }
+    }
+    .wl-section-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .wl-section-animate.visible { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
-<body class="dashboard-page">
+<body>
 
-  <!-- Mobile header -->
-  <header class="mobile-header">
-    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <span class="logo">AYURCARE</span>
-  </header>
+  <!-- ── Navbar ─────────────────────────────────────────────────────────── -->
+  <header class="wl-navbar">
+    <div class="wl-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="wl-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:32px;" onerror="this.style.display='none'" />
+        <span class="wl-logo-text">AYURCARE</span>
+      </a>
 
-  <div class="dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <span class="logo">AYURCARE</span>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
-      </div>
-
-      <div class="sidebar-user">
-        <span id="sidebar-user-name">Loading…</span>
-      </div>
-
-      <nav class="sidebar-nav" aria-label="Main navigation">
-        <a href="#dashboard" class="nav-link active" data-section="dashboard">
-          Dashboard
-        </a>
-        <a href="#account" class="nav-link" data-section="account">
-          View Account
-        </a>
-        <a href="#notifications" class="nav-link" data-section="notifications">
-          Notifications
-          <span class="badge" id="notification-badge" hidden>0</span>
-        </a>
-        <a href="/dashboards/prakritiTest.html" class="nav-link">
-          Prakriti Assessment
-        </a>
-        <a href="/dashboards/dietPlan.html" class="nav-link">
-          Diet Plan
-        </a>
-        <a href="/dashboards/yogaSessions.html" class="nav-link">
-          Yoga Sessions
-        </a>
-        <a href="/dashboards/plans.html" class="nav-link">
-          Plans &amp; Payment
-        </a>
+      <nav class="wl-nav" id="wl-nav" aria-label="Main navigation">
+        <a href="/dashboards/prakritiTest.html" class="wl-nav-link">Prakriti</a>
+        <a href="/dashboards/treatments.html" class="wl-nav-link">Treatments</a>
+        <a href="/dashboards/dietPlan.html" class="wl-nav-link">Diet Plan</a>
+        <a href="/dashboards/yogaPlans.html" class="wl-nav-link">Yoga Plans</a>
+        <a href="/dashboards/premiumContent.html" class="wl-nav-link">Premium</a>
       </nav>
 
-      <div class="sidebar-footer">
-        <button class="btn btn-outline btn-full" id="logout-btn">Logout</button>
-      </div>
-    </aside>
-
-    <!-- Main content -->
-    <main class="main-content">
-
-      <!-- Dashboard section -->
-      <section id="section-dashboard" class="content-section active">
-        <h2>Welcome, <span id="client-name">…</span></h2>
-        <div class="summary-cards">
-          <div class="summary-card">
-            <h3>Notifications</h3>
-            <p class="summary-value" id="summary-notification-count">—</p>
-            <p class="summary-label">unread</p>
-          </div>
-          <div class="summary-card">
-            <h3>Prakriti Status</h3>
-            <p class="summary-value" id="summary-prakriti-status">—</p>
+      <div class="wl-navbar-right">
+        <span class="wl-user-greeting">Hello, <strong id="nav-user-name"></strong></span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <!-- Bell button -->
+          <button id="notif-bell-btn" aria-label="Notifications" title="Notifications" style="position:relative;background:none;border:none;cursor:pointer;padding:6px 8px;color:#FFFDF1;font-size:1.25rem;line-height:1;display:flex;align-items:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='none'">
+            🔔
+            <span id="notif-bell-dot" style="display:none;position:absolute;top:3px;right:3px;width:9px;height:9px;background:#FF9644;border-radius:50%;border:2px solid #562F00;"></span>
+          </button>
+          <!-- Avatar + dropdown -->
+          <div class="wl-nav-dropdown">
+            <button class="wl-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="position:relative;">
+              <span class="wl-avatar-icon">&#128100;</span>
+            </button>
+            <div class="wl-dropdown-menu" id="avatar-dropdown" hidden>
+              <div class="wl-dropdown-stats">
+                <div class="wl-dropdown-stat-row">
+                  <span class="wl-dropdown-stat-icon">🌿</span>
+                  <div>
+                    <span class="wl-dropdown-stat-label">Prakriti Type</span>
+                    <span class="wl-dropdown-stat-value" id="stat-prakriti">Not assessed</span>
+                  </div>
+                </div>
+                <div class="wl-dropdown-stat-row">
+                  <span class="wl-dropdown-stat-icon">📋</span>
+                  <div>
+                    <span class="wl-dropdown-stat-label">Active Plans</span>
+                    <span class="wl-dropdown-stat-value" id="stat-plans">0 Active Plans</span>
+                  </div>
+                </div>
+                <div class="wl-dropdown-stat-row">
+                  <span class="wl-dropdown-stat-icon">⭐</span>
+                  <div>
+                    <span class="wl-dropdown-stat-label">Membership</span>
+                    <span class="wl-dropdown-stat-value" id="stat-membership">Free Plan</span>
+                  </div>
+                </div>
+              </div>
+              <hr class="wl-dropdown-divider" />
+              <a href="/dashboards/profile.html" class="wl-dropdown-item">&#128100; Profile</a>
+              <a href="/dashboards/settings.html" class="wl-dropdown-item">&#9881; Settings</a>
+              <a href="/dashboards/plans.html" class="wl-dropdown-item">&#128203; Plans &amp; Payment</a>
+              <hr class="wl-dropdown-divider" />
+              <button class="wl-dropdown-item wl-dropdown-logout" id="logout-btn">Logout</button>
+            </div>
           </div>
         </div>
-      </section>
+        <button class="wl-hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-      <!-- View Account section -->
-      <section id="section-account" class="content-section" hidden>
-        <h2>View Account</h2>
+  <!-- ── Mobile Drawer ──────────────────────────────────────────────── -->
+  <div class="wl-mobile-drawer" id="mobile-drawer" hidden>
+    <div class="wl-drawer-header">
+      <a href="/dashboards/patientDashboard.html" class="wl-logo">
+        <img src="/images/logo.png" alt="AYURCARE" style="height:30px;" onerror="this.style.display='none'" />
+        <span class="wl-logo-text">AYURCARE</span>
+      </a>
+      <button class="wl-drawer-close" id="drawer-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="wl-drawer-nav">
+      <a href="#prakriti-section" class="wl-drawer-link" data-close>Prakriti Analysis</a>
+      <a href="/dashboards/prakritiTest.html" class="wl-drawer-link">Take Prakriti Test</a>
+      <a href="/dashboards/treatments.html" class="wl-drawer-link">Treatments</a>
+      <a href="/dashboards/dietPlan.html" class="wl-drawer-link">Diet Plan</a>
+      <a href="/dashboards/yogaSessions.html" class="wl-drawer-link">Yoga Sessions</a>
+      <a href="/dashboards/yogaPlans.html" class="wl-drawer-link">Yoga Plans</a>
+      <a href="/dashboards/premiumContent.html" class="wl-drawer-link">Premium Content</a>
+      <a href="/dashboards/plans.html" class="wl-drawer-link">Plans &amp; Payment</a>
+      <a href="#account" class="wl-drawer-link" data-close data-section="account">Profile &amp; Settings</a>
+      <a href="#notifications" class="wl-drawer-link" data-close data-section="notifications">Notifications</a>
+    </nav>
+    <div class="wl-drawer-footer">
+      <button class="btn-outline btn-full" id="drawer-logout-btn">Logout</button>
+    </div>
+  </div>
+  <div class="wl-drawer-overlay" id="drawer-overlay" hidden></div>
 
-        <div id="profile-load-error" class="error-banner" hidden></div>
+  <!-- ── Hero Section ───────────────────────────────────────────────── -->
+  <section class="wl-hero" id="hero-section">
+    <div class="wl-hero-overlay"></div>
+    <div class="wl-hero-content">
+      <p class="wl-hero-eyebrow">Authentic Ayurvedic Wellness Platform</p>
+      <h1 class="wl-hero-title">Welcome Back</h1>
+      <p class="wl-hero-desc" id="hero-user-greeting" style="font-size:1.1rem;color:var(--wl-light-brown);margin-bottom:8px;font-weight:600;"></p>
+      <p class="wl-hero-desc">Track your wellness journey and explore personalised Ayurvedic services tailored to your unique constitution.</p>
+      <a href="#services-section" class="wl-hero-cta">Explore Services</a>
+    </div>
+    <div class="wl-hero-stats" id="hero-stats" style="display:none;" aria-hidden="true">
+      <a href="/dashboards/prakritiTest.html" class="wl-stat-card" style="text-decoration:none;">
+        <span class="wl-stat-icon">&#127807;</span>
+        <div>
+          <p class="wl-stat-label">Prakriti Type</p>
+          <p class="wl-stat-value" id="stat-prakriti-hidden">Not assessed</p>
+        </div>
+      </a>
+    </div>
+  </section>
 
-        <form id="profile-form" novalidate>
-          <div class="form-group">
+  <!-- ── Main Content ───────────────────────────────────────────────── -->
+  <div class="wl-main" id="wl-main">
+
+    <!-- ── Prakriti Section ──────────────────────────────────────────── -->
+    <section class="wl-section" id="prakriti-section">
+      <div class="wl-section-inner wl-prakriti-inner">
+        <div class="wl-prakriti-content">
+          <p class="wl-section-eyebrow">Body Constitution Analysis</p>
+          <h2 class="wl-section-title" style="text-align:left;">Know Your Prakriti</h2>
+          <p class="wl-prakriti-desc">Your body constitution helps us recommend the most suitable treatments, diet, and lifestyle practices for you.</p>
+          <div class="wl-dosha-tags">
+            <span class="wl-dosha-tag vata">Vata — Air &amp; Space</span>
+            <span class="wl-dosha-tag pitta">Pitta — Fire &amp; Water</span>
+            <span class="wl-dosha-tag kapha">Kapha — Earth &amp; Water</span>
+          </div>
+          <div id="prakriti-status-area">
+            <p id="prakriti-status-text" class="wl-loading-text">Loading your Prakriti status...</p>
+          </div>
+          <a href="/dashboards/prakritiTest.html" class="wl-hero-cta" style="margin-top:20px;display:inline-block;">Start Prakriti Assessment</a>
+        </div>
+        <div class="wl-prakriti-img" style="background-image:url('/images/yoga_asan.webp');border-radius:16px;"></div>
+      </div>
+    </section>
+
+    <!-- ── Services Section ──────────────────────────────────────────── -->
+    <section class="wl-section wl-services-section" id="services-section">
+      <div class="wl-section-inner">
+        <div class="wl-section-header">
+          <h2 class="wl-section-title">Our Ayurvedic Wellness Services</h2>
+          <p class="wl-section-desc">Explore a range of authentic Ayurvedic services designed to restore balance, improve health, and enhance your lifestyle.</p>
+        </div>
+
+        <div class="wl-tabs" role="tablist" aria-label="Service categories">
+          <button class="wl-tab active" role="tab" aria-selected="true" data-tab="treatments">Treatments</button>
+          <button class="wl-tab" role="tab" aria-selected="false" data-tab="yoga">Yoga Plans</button>
+          <button class="wl-tab" role="tab" aria-selected="false" data-tab="content">Premium Content</button>
+        </div>
+
+        <!-- Treatments tab -->
+        <div id="tab-treatments" class="wl-tab-panel">
+          <div class="wl-services-grid" id="treatments-grid">
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/Panchakarma.jpg');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Joint pain relief yog</span>
+                <h3 class="wl-service-title">Mobility &amp; stengthning Therapy</h3>
+                <p class="wl-service-desc">A set of gentle yoga exercises that help reduce pain and improve joint flexibility.</p>
+                <ul class="wl-service-benefits">
+                  <li>Reduce joint pain</li>
+                  <li>Improved flexibility &amp; Enhance joint movements </li>
+                  
+                </ul>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/garbhasanskar.png');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Garbhasanskar</span>
+                <h3 class="wl-service-title">A traditional practice of nurturing the baby in womb.</h3>
+                <p class="wl-service-desc">Garbhasanskar is a traditional practice of nurturing baby in womb through yoga and diet.</p>
+                <ul class="wl-service-benefits">
+                  <li>Improved baby brain development</li>
+                  <li>Reduce stress &amp; forms emotional bond</li>
+                  <li>Deep relaxation</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/meditation.png');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Meditation</span>
+                <h3 class="wl-service-title">Mind Calming Treatment</h3>
+                <p class="wl-service-desc">A practice of focousing the mind to calm the mind, relieve stress and improve sleep quality.</p>
+                <ul class="wl-service-benefits">
+                  <li>Anxiety &amp; stress reduction</li>
+                  <li>Better sleep quality</li>
+                  <li>Enhanced mental focus</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:28px;">
+            <a href="/dashboards/treatments.html" class="wl-hero-cta">Explore Treatments</a>
+          </div>
+        </div>
+
+        <!-- Yoga tab -->
+        <div id="tab-yoga" class="wl-tab-panel" hidden>
+          <div class="wl-services-grid" id="yoga-grid">
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/yoga-bg.webp');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Beginner</span>
+                <h3 class="wl-service-title">Beginner Yoga Plan</h3>
+                <p class="wl-service-desc">Simple daily yoga routines for flexibility and stress relief. Ideal for those new to yoga or returning after a break.</p>
+                <ul class="wl-service-benefits">
+                  <li>Improved flexibility</li>
+                  <li>Stress &amp; anxiety relief</li>
+                  <li>Better posture</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/wellness-bg.avif');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Weight Management</span>
+                <h3 class="wl-service-title">Weight Balance Yoga</h3>
+                <p class="wl-service-desc">Targeted yoga practices for healthy weight management, combining dynamic asanas with breathwork for optimal results.</p>
+                <ul class="wl-service-benefits">
+                  <li>Healthy weight management</li>
+                  <li>Improved metabolism</li>
+                  <li>Core strength</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg" style="background-image:url('/images/ayur-bg.avif');"></div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Mindfulness</span>
+                <h3 class="wl-service-title">Mindfulness &amp; Meditation</h3>
+                <p class="wl-service-desc">Guided breathing and meditation practices for mental clarity, emotional balance, and deep inner peace.</p>
+                <ul class="wl-service-benefits">
+                  <li>Mental clarity &amp; focus</li>
+                  <li>Emotional balance</li>
+                  <li>Reduced cortisol levels</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:28px;">
+            <a href="/dashboards/yogaPlans.html" class="wl-hero-cta">Explore Yoga Plans</a>
+          </div>
+        </div>
+
+        <!-- Premium Content tab -->
+        <div id="tab-content" class="wl-tab-panel" hidden>
+          <div class="wl-services-grid" id="content-grid-tab">
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg wl-service-img-icon">&#129367;</div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Diet</span>
+                <h3 class="wl-service-title">Personalised Diet Plans</h3>
+                <p class="wl-service-desc">Custom Ayurvedic diet recommendations based on your Prakriti type — foods to favour, foods to avoid, and seasonal guidelines.</p>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg wl-service-img-icon">&#128218;</div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Guides</span>
+                <h3 class="wl-service-title">Exclusive Wellness Guides</h3>
+                <p class="wl-service-desc">In-depth knowledge on Ayurvedic herbs, lifestyle practices, seasonal routines, and holistic healing methods.</p>
+              </div>
+            </div>
+            <div class="wl-service-card">
+              <div class="wl-service-img-bg wl-service-img-icon">&#127909;</div>
+              <div class="wl-service-body">
+                <span class="wl-service-category">Video</span>
+                <h3 class="wl-service-title">Video Consultations</h3>
+                <p class="wl-service-desc">Connect with certified Ayurvedic experts for personalised guidance, treatment recommendations, and follow-up sessions.</p>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-top:28px;">
+            <a href="/dashboards/premiumContent.html" class="wl-hero-cta">Explore Premium Content</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Profile & Settings Section ────────────────────────────────── -->
+    <section class="wl-section" id="account" hidden>
+      <div class="wl-section-header">
+        <h2 class="wl-section-title">Profile &amp; Settings</h2>
+        <p class="wl-section-desc">Update your personal information and preferences below.</p>
+      </div>
+      <div class="wl-account-card">
+        <p style="font-size:0.9rem;color:#7a6a55;margin-bottom:20px;">Keep your profile updated to receive the most accurate wellness recommendations.</p>
+        <div id="profile-load-error" class="wl-error-banner" hidden></div>
+        <form id="profile-form" novalidate class="wl-profile-form">
+          <div class="wl-form-group">
             <label for="profile-name">Full Name</label>
             <input type="text" id="profile-name" name="name" required />
-            <span class="field-error" id="profile-name-error"></span>
+            <span class="wl-field-error" id="profile-name-error"></span>
           </div>
-
-          <div class="form-group">
+          <div class="wl-form-group">
             <label for="profile-email">Email</label>
             <input type="email" id="profile-email" name="email" readonly />
           </div>
-
-          <div class="form-group">
+          <div class="wl-form-group">
             <label for="profile-role">Role</label>
             <input type="text" id="profile-role" name="role" readonly />
           </div>
-
-          <div id="profile-success" class="success-banner" hidden>Profile updated successfully.</div>
-          <div id="profile-error" class="error-banner" hidden></div>
-
-          <button type="submit" class="btn btn-primary" id="profile-save-btn">Save Changes</button>
+          <div id="profile-success" class="wl-success-banner" hidden>Profile updated successfully.</div>
+          <div id="profile-error" class="wl-error-banner" hidden></div>
+          <button type="submit" class="wl-save-goals-btn" id="profile-save-btn">Save Changes</button>
         </form>
-      </section>
+      </div>
+    </section>
 
-      <!-- Notifications section -->
-      <section id="section-notifications" class="content-section" hidden>
-        <h2>Notifications</h2>
-        <div id="notifications-load-error" class="error-banner" hidden></div>
-        <ul id="notifications-list" class="notifications-list" aria-live="polite">
-          <li class="notifications-empty">Loading notifications…</li>
+    <!-- ── Notifications Section ─────────────────────────────────────── -->
+    <section class="wl-section" id="notifications" hidden>
+      <div class="wl-section-header">
+        <h2 class="wl-section-title">Notifications</h2>
+      </div>
+      <div id="notifications-container">
+        <ul class="wl-notif-list" id="notifications-list">
+          <li class="wl-notif-empty">You have no new notifications at the moment.</li>
         </ul>
-      </section>
+      </div>
+    </section>
 
-    </main>
+  </div><!-- /.wl-main -->
+
+  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <footer class="wl-footer">
+    <div class="wl-footer-inner">
+      <div class="wl-footer-brand">
+        <a href="/index.html" class="wl-logo">
+          <img src="/images/logo.png" alt="AYURCARE" style="height:28px;" onerror="this.style.display='none'" />
+          <span class="wl-logo-text">AYURCARE</span>
+        </a>
+        <p class="wl-footer-tagline">Ancient Wisdom. Modern Wellness.</p>
+      </div>
+      <div class="wl-footer-contact">
+        <p class="wl-footer-contact-title">Need help choosing the right treatment?</p>
+        <p class="wl-footer-contact-num">Call us at <strong>+91 98765 43210</strong></p>
+        <p class="wl-footer-contact-note">Mon–Sat, 9 AM – 6 PM</p>
+      </div>
+    </div>
+    <div class="wl-footer-bottom">
+      <p>&copy; 2025 AYURCARE. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ── Notification Panel (slide-in) ─────────────────────────────── -->
+  <div id="notif-panel" style="display:none;position:fixed;top:0;right:0;width:360px;max-width:100vw;height:100vh;background:#FFFDF1;box-shadow:-4px 0 24px rgba(86,47,0,0.18);z-index:900;flex-direction:column;overflow:hidden;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid #FFCE99;background:#562F00;">
+      <h3 style="color:#FFFDF1;font-family:Georgia,serif;margin:0;font-size:1.05rem;">🔔 Notifications</h3>
+      <button id="notif-panel-close" style="background:none;border:none;color:#FFFDF1;font-size:1.4rem;cursor:pointer;line-height:1;padding:4px 8px;">&times;</button>
+    </div>
+    <div id="notif-panel-list" style="flex:1;overflow-y:auto;padding:12px 0;">
+      <p style="text-align:center;color:#8B5E3C;padding:32px 20px;font-style:italic;font-size:0.9rem;">Loading notifications...</p>
+    </div>
+    <div style="padding:12px 16px;border-top:1px solid #FFCE99;">
+      <button id="notif-mark-all-btn" style="width:100%;padding:10px;background:#FF9644;color:#562F00;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;">Mark All as Read</button>
+    </div>
   </div>
+  <div id="notif-panel-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:899;"></div>
 
-  <script src="/js/dashboard.js"></script>
+  <!-- ── Welcome Modal ──────────────────────────────────────────────── -->
+  <div id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;">
+    <div id="welcome-modal-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.5);"></div>
+    <div id="welcome-modal-box" style="position:relative;z-index:1;background:#fff;border-radius:16px;padding:40px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(90,62,40,0.18);">
+      <div style="font-size:2.5rem;margin-bottom:12px;"></div>
+      <h2 id="welcome-modal-title" style="font-family:Georgia,serif;color:#5a3e28;font-size:1.4rem;margin-bottom:8px;"></h2>
+      <p style="color:#7a6a55;font-size:0.95rem;line-height:1.6;margin-bottom:24px;">Your personalised Ayurvedic wellness journey continues. Explore your dashboard to discover treatments, diet plans, and yoga sessions tailored just for you.</p>
+      <button id="welcome-modal-close" class="btn-primary" style="padding:12px 32px;font-size:1rem;">Continue to Dashboard</button>
+    </div>
+  </div>
+  <style>
+    #welcome-modal.visible { display: flex !important; }
+  </style>
+
+  <script src="../js/wellness.js"></script>
+
+  <script>
+    // Scroll-reveal for sections
+    (function () {
+      var els = document.querySelectorAll('.wl-section, .wl-account-card, .wl-goals-card');
+      els.forEach(function (el) { el.classList.add('wl-section-animate'); });
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      els.forEach(function (el) { obs.observe(el); });
+    }());
+
+    // Sync hero name with nav name
+    var heroNameEl = document.getElementById('hero-user-greeting');
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) {
+        if (!d) return;
+        var navName = document.getElementById('nav-user-name');
+        if (navName) navName.textContent = d.name || '';
+        if (heroNameEl) {
+          var tierLabels = { free: '', gold: ' · Gold Member ⭐', platinum: ' · Platinum Member 💎' };
+          var tier = d.membership_tier || 'free';
+          heroNameEl.textContent = 'Welcome, ' + (d.name || 'there') + '!' + (tierLabels[tier] || '');
+        }
+        var statPrakriti = document.getElementById('stat-prakriti');
+        if (statPrakriti && d.prakritiType) statPrakriti.textContent = d.prakritiType;
+        var statMembership = document.getElementById('stat-membership');
+        if (statMembership) {
+          var mLabels = { free: 'Free Plan', gold: 'Gold', platinum: 'Platinum' };
+          statMembership.textContent = mLabels[d.membership_tier] || 'Free Plan';
+        }
+      })
+      .catch(function() {});
+  </script>
+
+  <script>
+    // ── Notification Panel ──────────────────────────────────────────
+    (function () {
+      var bellBtn      = document.getElementById('notif-bell-btn');
+      var bellDot      = document.getElementById('notif-bell-dot');
+      var panel        = document.getElementById('notif-panel');
+      var panelOverlay = document.getElementById('notif-panel-overlay');
+      var panelClose   = document.getElementById('notif-panel-close');
+      var panelList    = document.getElementById('notif-panel-list');
+      var markAllBtn   = document.getElementById('notif-mark-all-btn');
+
+      function fmtDate(iso) {
+        try { return new Date(iso).toLocaleString(undefined, { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); }
+        catch(e) { return ''; }
+      }
+
+      function openPanel() {
+        panel.style.display = 'flex';
+        panelOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        loadNotifPanel();
+      }
+
+      function closePanel() {
+        panel.style.display = 'none';
+        panelOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      function loadNotifPanel() {
+        panelList.innerHTML = '<p style="text-align:center;color:#8B5E3C;padding:32px 20px;font-style:italic;font-size:0.9rem;">Loading...</p>';
+        fetch('/api/client/notifications', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : []; })
+          .then(function(notifs) {
+            if (!notifs.length) {
+              panelList.innerHTML = '<p style="text-align:center;color:#8B5E3C;padding:32px 20px;font-style:italic;font-size:0.9rem;">No notifications yet.</p>';
+              return;
+            }
+            panelList.innerHTML = notifs.map(function(n) {
+              return '<div data-id="' + n.id + '" class="notif-item" style="padding:14px 18px;border-bottom:1px solid #FFCE99;cursor:pointer;background:' + (n.is_read ? '#FFFDF1' : '#FFF5E6') + ';">' +
+                '<div style="display:flex;align-items:flex-start;gap:10px;">' +
+                  '<span style="font-size:1rem;flex-shrink:0;">' + (n.is_read ? '📭' : '🔔') + '</span>' +
+                  '<div style="flex:1;">' +
+                    '<p style="margin:0 0 4px;font-size:0.88rem;color:#562F00;line-height:1.5;">' + String(n.message||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>' +
+                    '<time style="font-size:0.75rem;color:#8B5E3C;">' + fmtDate(n.created_at) + '</time>' +
+                  '</div>' +
+                  (!n.is_read ? '<span style="width:8px;height:8px;background:#FF9644;border-radius:50%;flex-shrink:0;margin-top:4px;"></span>' : '') +
+                '</div>' +
+              '</div>';
+            }).join('');
+
+            // Click to mark individual as read
+            panelList.querySelectorAll('.notif-item').forEach(function(item) {
+              item.addEventListener('click', function() {
+                var id = item.dataset.id;
+                fetch('/api/client/notifications/' + id + '/read', { method: 'PATCH', credentials: 'include' })
+                  .then(function() { loadNotifPanel(); updateBellDot(); })
+                  .catch(function() {});
+              });
+            });
+
+            updateBellDot();
+          })
+          .catch(function() {
+            panelList.innerHTML = '<p style="text-align:center;color:#8B5E3C;padding:32px 20px;">Failed to load notifications.</p>';
+          });
+      }
+
+      function updateBellDot() {
+        fetch('/api/client/dashboard', { credentials: 'include' })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(d) {
+            if (!d) return;
+            var hasUnread = d.notificationCount > 0;
+            if (bellDot) bellDot.style.display = hasUnread ? 'block' : 'none';
+            var statNotif = document.getElementById('stat-notif');
+            if (statNotif) statNotif.textContent = hasUnread ? d.notificationCount + ' unread' : 'No new updates';
+          }).catch(function() {});
+      }
+
+      if (bellBtn) bellBtn.addEventListener('click', openPanel);
+      if (panelClose) panelClose.addEventListener('click', closePanel);
+      if (panelOverlay) panelOverlay.addEventListener('click', closePanel);
+
+      if (markAllBtn) {
+        markAllBtn.addEventListener('click', function() {
+          fetch('/api/client/notifications/read-all', { method: 'PATCH', credentials: 'include' })
+            .then(function() { loadNotifPanel(); updateBellDot(); })
+            .catch(function() {});
+        });
+      }
+
+      // Initial dot state
+      updateBellDot();
+    }());
+  </script>
+
 </body>
 </html>

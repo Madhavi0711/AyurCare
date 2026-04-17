@@ -6,12 +6,12 @@
 /* ── Custom Properties ─────────────────────────────────────── */
 :root {
   --color-green:       #4a7c59;
-  --color-beige:       #fdf6ec;
-  --color-brown:       #5a3e28;
-  --color-light-brown: #c8a96e;
-  --color-dark-brown:  #3b2a1a;
-  --color-text:        #3b2a1a;
-  --color-bg:          #fdf6ec;
+  --color-beige:       #FFFDF1;
+  --color-brown:       #562F00;
+  --color-light-brown: #FF9644;
+  --color-dark-brown:  #562F00;
+  --color-text:        #562F00;
+  --color-bg:          #FFFDF1;
   --sidebar-width:     240px;
 }
 
@@ -51,7 +51,7 @@ a:hover {
   position: sticky;
   top: 0;
   z-index: 300;
-  background: var(--color-brown);
+  background: #562F00;
   color: var(--color-beige);
   height: 60px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -172,7 +172,7 @@ a:hover {
 /* Sub-page user dropdown hover */
 .sp-dropdown-menu a:hover,
 .sp-dropdown-menu button:hover {
-  background: #fdf6ec;
+  background: #9a8363;
   color: var(--color-brown);
   text-decoration: none;
 }
@@ -2838,7 +2838,7 @@ html.dark-mode body {
 }
 body.dark-mode .sp-navbar,
 html.dark-mode body .sp-navbar {
-  background: #1a1208 !important;
+  background: #562F00 !important;
   border-color: #4a3520 !important;
 }
 body.dark-mode .sp-content,

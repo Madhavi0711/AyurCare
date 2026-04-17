@@ -215,7 +215,7 @@
       return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    var typeLabels = { video: '?? Video', notes: '?? Notes', diet: '?? Diet Plan' };
+    var typeLabels = { video: '\uD83C\uDFAC Video', notes: '\uD83D\uDCCB Notes', diet: '\uD83E\uDD57 Diet Plan' };
 
     function renderContent(items) {
       contentGrid.innerHTML = '';
@@ -254,7 +254,6 @@
           if (!res.ok) { showMsg('Failed to load content.', 'error'); return; }
           return res.json().then(function(data) {
             loadingEl.style.display = 'none';
-            premiumHeader.style.display = 'block';
             contentArea.style.display = 'block';
             renderContent(data);
           });

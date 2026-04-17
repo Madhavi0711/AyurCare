@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upgrade Plan — AYURCARE</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/client-init.js"></script>
+  <style>
+    .pay-wrap {
+      max-width: 560px;
+      margin: 48px auto;
+      padding: 0 20px 64px;
+    }
+    .pay-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .pay-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c8a96e;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pay-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: #5a3e28;
+      font-family: Georgia, serif;
+      margin-bottom: 8px;
+    }
+    .pay-subtitle { color: #7a6a55; font-size: 0.95rem; line-height: 1.6; }
+
+    .pay-tier-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .pay-tier-btn {
+      border: 2px solid #e8d5a3;
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .pay-tier-btn.selected { border-color: #c8a96e; box-shadow: 0 4px 16px rgba(200,169,110,0.25); }
+    .pay-tier-btn .tier-name { font-size: 1.1rem; font-weight: 700; color: #5a3e28; font-family: Georgia, serif; }
+    .pay-tier-btn .tier-price { font-size: 1.4rem; font-weight: 700; color: #c8a96e; margin: 4px 0; }
+    .pay-tier-btn .tier-features { font-size: 0.78rem; color: #7a6a55; line-height: 1.5; }
+    .pay-tier-btn.gold .tier-name { color: #b8860b; }
+    .pay-tier-btn.platinum .tier-name { color: #5a3e28; }
+
+    .pay-qr-box {
+      background: linear-gradient(135deg, #2a1c0e, #3b2a1a);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .pay-qr-box h3 { color: #f0e0c0; font-family: Georgia, serif; margin-bottom: 6px; }
+    .pay-qr-box p { color: rgba(240,224,192,0.7); font-size: 0.88rem; margin-bottom: 20px; }
+    .pay-qr-img {
+      width: 180px;
+      height: 180px;
+      background: #fff;
+      border-radius: 12px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #7a6a55;
+      overflow: hidden;
+    }
+    .pay-qr-img img { width: 100%; height: 100%; object-fit: contain; }
+    .pay-amount-badge {
+      display: inline-block;
+      background: rgba(200,169,110,0.2);
+      border: 1px solid rgba(200,169,110,0.4);
+      color: #c8a96e;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .pay-upi-id {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: rgba(240,224,192,0.6);
+    }
+    .pay-upi-id strong { color: #c8a96e; }
+
+    .pay-form-card {
+      background: #fff;
+      border: 1px solid #e8d5a3;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .pay-form-card h3 { color: #5a3e28; font-family: Georgia, serif; margin-bottom: 20px; font-size: 1rem; }
+    .pay-form-group { margin-bottom: 16px; }
+    .pay-form-group label { display: block; font-size: 0.85rem; color: #5a3e28; font-weight: 600; margin-bottom: 6px; }
+    .pay-form-group input, .pay-form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #e8d5a3;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      color: #3b2a1a;
+      background: #fdf6ec;
+      box-sizing: border-box;
+    }
+    .pay-form-group input:focus, .pay-form-group select:focus {
+      outline: none;
+      border-color: #c8a96e;
+      background: #fff;
+    }
+    .pay-submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #c8a96e;
+      color: #3b2a1a;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .pay-submit-btn:hover { background: #b8994e; }
+    .pay-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .pay-status { padding: 14px 18px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 16px; display: none; }
+    .pay-status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .pay-status.error   { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .pay-status.info    { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+
+    .pay-pending-notice {
+      background: linear-gradient(135deg, #fdf6ec, #fff8f0);
+      border: 1px solid #e8d5a3;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      display: none;
+    }
+    .pay-pending-notice h3 { color: #5a3e28; font-family: Georgia, serif; margin-bottom: 8px; }
+    .pay-pending-notice p { color: #7a6a55; font-size: 0.9rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <header class="sp-navbar">
+    <div class="sp-navbar-inner">
+      <a href="/dashboards/patientDashboard.html" class="sp-logo">
+        <img src="/images/logo.png" alt="AYURCARE" onerror="this.style.display='none'" />
+        <span class="sp-logo-text">AYURCARE</span>
+      </a>
+      <nav class="sp-nav">
+        <a href="/dashboards/patientDashboard.html" class="sp-nav-link">Dashboard</a>
+        <a href="/dashboards/prakritiTest.html" class="sp-nav-link">Prakriti</a>
+        <a href="/dashboards/plans.html" class="sp-nav-link">Plans</a>
+      </nav>
+      <div class="sp-navbar-right">
+        <span class="sp-user-name" id="nav-user-name"></span>
+        <div class="sp-user-dropdown" style="position:relative;">
+          <button class="sp-avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false" style="background:rgba(255,255,255,0.12);border:1px solid rgba(200,169,110,0.4);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-light-brown);font-size:1rem;">&#128100;</button>
+          <div class="sp-dropdown-menu" id="sp-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid #e8d5a3;border-radius:10px;box-shadow:0 4px 16px rgba(90,62,40,0.12);min-width:180px;padding:6px 0;z-index:600;">
+            <a href="/dashboards/profile.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128100; Profile</a>
+            <a href="/dashboards/plans.html" style="display:block;padding:10px 18px;font-size:0.9rem;color:#3b2a1a;text-decoration:none;font-family:Georgia,serif;">&#128203; Plans</a>
+            <hr style="border:none;border-top:1px solid #e8d5a3;margin:4px 0;" />
+            <button id="logout-btn" style="display:block;width:100%;padding:10px 18px;font-size:0.9rem;color:#c0392b;background:none;border:none;text-align:left;cursor:pointer;font-family:Georgia,serif;">&#128682; Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="pay-wrap">
+    <div class="pay-header">
+      <p class="pay-eyebrow">Upgrade Your Plan</p>
+      <h1 class="pay-title">Complete Your Payment</h1>
+      <p class="pay-subtitle">Scan the QR code to pay, then submit your transaction details below for admin verification.</p>
+    </div>
+
+    <!-- Pending notice (shown if already submitted) -->
+    <div class="pay-pending-notice" id="pending-notice">
+      <h3>⏳ Request Under Review</h3>
+      <p>Your payment request has been submitted and is pending admin approval. You'll receive a notification once it's reviewed.</p>
+    </div>
+
+    <div id="pay-main-content">
+      <!-- Tier selector -->
+      <div class="pay-tier-selector">
+        <div class="pay-tier-btn gold" data-tier="gold" data-amount="499">
+          <div class="tier-name">⭐ Gold</div>
+          <div class="tier-price">₹499<span style="font-size:0.75rem;font-weight:400;color:#7a6a55;">/month</span></div>
+          <div class="tier-features">Prakriti + Diet Plan + Yoga Plans</div>
+        </div>
+        <div class="pay-tier-btn platinum" data-tier="platinum" data-amount="999">
+          <div class="tier-name">💎 Platinum</div>
+          <div class="tier-price">₹999<span style="font-size:0.75rem;font-weight:400;color:#7a6a55;">/month</span></div>
+          <div class="tier-features">All Gold features + Premium Content</div>
+        </div>
+      </div>
+
+      <!-- QR Code box -->
+      <div class="pay-qr-box">
+        <h3>Scan &amp; Pay via UPI</h3>
+        <p>Use any UPI app — GPay, PhonePe, Paytm, or your bank app</p>
+        <div class="pay-qr-img" id="qr-img-wrap">
+          <!-- QR image placeholder — replace src with actual QR image -->
+          <img src="/images/ayurlogo.png" alt="UPI QR Code" id="qr-img" style="padding:12px;" onerror="this.parentElement.innerHTML='<span style=\'padding:20px;text-align:center;\'>Place your UPI QR code image here</span>'" />
+        </div>
+        <div class="pay-amount-badge" id="qr-amount">₹499</div>
+        <p class="pay-upi-id">UPI ID: <strong>ayurcare@upi</strong></p>
+      </div>
+
+      <!-- Transaction form -->
+      <div class="pay-form-card">
+        <h3>Submit Payment Details</h3>
+        <div id="pay-status" class="pay-status"></div>
+        <div class="pay-form-group">
+          <label for="pay-tier">Selected Plan</label>
+          <select id="pay-tier">
+            <option value="gold">Gold — ₹499/month</option>
+            <option value="platinum">Platinum — ₹999/month</option>
+          </select>
+        </div>
+        <div class="pay-form-group">
+          <label for="pay-txn">Transaction ID / UTR Number</label>
+          <input type="text" id="pay-txn" placeholder="e.g. 123456789012" />
+        </div>
+        <div class="pay-form-group">
+          <label for="pay-platform">Payment Platform</label>
+          <select id="pay-platform">
+            <option value="">Select platform</option>
+            <option value="GPay">Google Pay (GPay)</option>
+            <option value="PhonePe">PhonePe</option>
+            <option value="Paytm">Paytm</option>
+            <option value="BHIM">BHIM UPI</option>
+            <option value="NetBanking">Net Banking</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="pay-form-group">
+          <label for="pay-amount">Amount Paid (₹)</label>
+          <input type="number" id="pay-amount" placeholder="e.g. 499" min="1" />
+        </div>
+        <button class="pay-submit-btn" id="pay-submit-btn">Submit for Verification</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Nav dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var spDropdown = document.getElementById('sp-dropdown');
+    if (avatarBtn) {
+      avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = spDropdown.style.display === 'block';
+        spDropdown.style.display = open ? 'none' : 'block';
+        avatarBtn.setAttribute('aria-expanded', String(!open));
+      });
+      document.addEventListener('click', function() { spDropdown.style.display = 'none'; });
+    }
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      fetch('/api/logout', { method: 'POST' }).finally(function() { window.location.href = '/index.html'; });
+    });
+
+    // Load user name
+    fetch('/api/client/dashboard', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { if (d && document.getElementById('nav-user-name')) document.getElementById('nav-user-name').textContent = d.name; })
+      .catch(function() {});
+
+    // Read tier from URL param
+    var params = new URLSearchParams(window.location.search);
+    var preselectedTier = params.get('tier') || 'gold';
+
+    // Tier selector
+    var tierBtns = document.querySelectorAll('.pay-tier-btn');
+    var selectedTier = preselectedTier;
+    var tierAmounts = { gold: 499, platinum: 999 };
+
+    function selectTier(tier) {
+      selectedTier = tier;
+      tierBtns.forEach(function(b) { b.classList.toggle('selected', b.dataset.tier === tier); });
+      document.getElementById('pay-tier').value = tier;
+      document.getElementById('pay-amount').value = tierAmounts[tier] || '';
+      document.getElementById('qr-amount').textContent = '₹' + (tierAmounts[tier] || '');
+    }
+
+    tierBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() { selectTier(btn.dataset.tier); });
+    });
+    selectTier(preselectedTier);
+
+    // Sync select with tier buttons
+    document.getElementById('pay-tier').addEventListener('change', function() { selectTier(this.value); });
+
+    // Check for existing pending request
+    fetch('/api/payment/my-requests', { credentials: 'include' })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(reqs) {
+        var pending = reqs.find(function(r) { return r.status === 'pending'; });
+        if (pending) {
+          document.getElementById('pending-notice').style.display = 'block';
+          document.getElementById('pay-main-content').style.display = 'none';
+        }
+      }).catch(function() {});
+
+    // Submit
+    document.getElementById('pay-submit-btn').addEventListener('click', function() {
+      var txn = document.getElementById('pay-txn').value.trim();
+      var platform = document.getElementById('pay-platform').value;
+      var amount = document.getElementById('pay-amount').value;
+      var statusEl = document.getElementById('pay-status');
+
+      function showStatus(msg, type) {
+        statusEl.textContent = msg;
+        statusEl.className = 'pay-status ' + type;
+        statusEl.style.display = 'block';
+      }
+
+      if (!txn) { showStatus('Please enter your Transaction ID / UTR number.', 'error'); return; }
+      if (!platform) { showStatus('Please select the payment platform.', 'error'); return; }
+
+      var btn = document.getElementById('pay-submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      fetch('/api/payment/request', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requested_tier: selectedTier,
+          transaction_id: txn,
+          payment_platform: platform,
+          amount: amount || null,
+        }),
+      })
+        .then(function(r) { return r.json().then(function(j) { return { ok: r.ok, j: j }; }); })
+        .then(function(res) {
+          if (res.ok) {
+            showStatus('✅ ' + res.j.message, 'success');
+            btn.textContent = 'Submitted';
+            setTimeout(function() {
+              document.getElementById('pending-notice').style.display = 'block';
+              document.getElementById('pay-main-content').style.display = 'none';
+            }, 2000);
+          } else {
+            showStatus(res.j.error || 'Submission failed. Please try again.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Submit for Verification';
+          }
+        })
+        .catch(function() {
+          showStatus('Network error. Please try again.', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Submit for Verification';
+        });
+    });
+  </script>
+</body>
+</html>

@@ -149,3 +149,29 @@ var AyurCharts = (function () {
     renderUserActivity: renderUserActivity,
   };
 }());
+
+// Tier distribution bar chart — added outside IIFE, uses Chart.js directly
+AyurCharts.renderTierDistribution = function(canvasId, data) {
+  // Destroy existing chart if any
+  if (AyurCharts._tierChart) { AyurCharts._tierChart.destroy(); AyurCharts._tierChart = null; }
+  var ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  AyurCharts._tierChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Free', 'Gold', 'Platinum'],
+      datasets: [{
+        label: 'Users',
+        data: [data.free || 0, data.gold || 0, data.platinum || 0],
+        backgroundColor: ['#f0e8dc', '#fff3cd', '#e2d9f3'],
+        borderColor: ['#562F00', '#b8860b', '#3d1a78'],
+        borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+      plugins: { legend: { display: false } },
+    },
+  });
+};

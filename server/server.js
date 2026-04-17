@@ -32,6 +32,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/content', require('./routes/contentRoutes'));
 app.use('/api/yoga-plans', require('./routes/yogaPlansRoutes'));
 app.use('/api/membership-plans', require('./routes/membershipPlansRoutes'));
+app.use('/api/payment', require('./routes/paymentRoutes'));
 
 // Membership upgrade (simulate payment — sets membership_type to 'paid')
 const requireAuth = require('./middleware/requireAuth');
@@ -46,6 +47,31 @@ app.post('/api/upgrade', requireAuth('client'), async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Auto-create password_reset_tokens table if missing
+query(`CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token      VARCHAR(64) NOT NULL UNIQUE,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used       BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)`).catch(err => console.error('password_reset_tokens table error:', err));
+
+// Auto-create payment_requests table if missing
+query(`CREATE TABLE IF NOT EXISTS payment_requests (
+  id               SERIAL PRIMARY KEY,
+  user_id          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  requested_tier   VARCHAR(20) NOT NULL CHECK (requested_tier IN ('gold','platinum')),
+  transaction_id   VARCHAR(255) NOT NULL,
+  payment_platform VARCHAR(100) NOT NULL,
+  amount           NUMERIC(10,2),
+  status           VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  admin_note       TEXT,
+  reviewed_by      INTEGER REFERENCES users(id),
+  reviewed_at      TIMESTAMPTZ,
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+)`).catch(err => console.error('payment_requests table error:', err));
 
 // Tiered upgrade — Free / Gold / Platinum
 app.post('/api/upgrade-tier', requireAuth('client'), async (req, res) => {
