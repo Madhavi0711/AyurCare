@@ -1,4 +1,4 @@
-const { query, withTransaction } = require('../db');
+﻿const { query, withTransaction } = require('../db');
 
 async function getDashboard(req, res) {
   try {
@@ -257,10 +257,13 @@ async function exportReports(req, res) {
 
 async function getAnalytics(req, res) {
   try {
-    const [distributionResult, dailyTestsResult, userActivityResult] = await Promise.all([
+    const [distributionResult, dailyTestsResult, userActivityResult, tierResult, pendingResult, approvedResult] = await Promise.all([
       query(`SELECT dominant_type, COUNT(*) AS count FROM prakriti_results WHERE status = 'approved' GROUP BY dominant_type`),
       query(`SELECT DATE(created_at) AS day, COUNT(*) AS count FROM prakriti_results WHERE created_at >= NOW() - INTERVAL '30 days' GROUP BY day ORDER BY day ASC`),
       query(`SELECT DATE(created_at) AS day, COUNT(DISTINCT user_id) AS count FROM prakriti_results WHERE created_at >= NOW() - INTERVAL '30 days' GROUP BY day ORDER BY day ASC`),
+      query(`SELECT membership_tier, COUNT(*) AS count FROM users WHERE role = 'client' GROUP BY membership_tier`),
+      query(`SELECT COUNT(*) AS count FROM prakriti_results WHERE status = 'pending'`),
+      query(`SELECT COUNT(*) AS count FROM prakriti_results WHERE status = 'approved'`),
     ]);
     const prakritiDistribution = { vata: 0, pitta: 0, kapha: 0 };
     for (const row of distributionResult.rows) {
@@ -268,8 +271,16 @@ async function getAnalytics(req, res) {
         prakritiDistribution[row.dominant_type] = parseInt(row.count, 10);
       }
     }
+    const tierDistribution = { free: 0, gold: 0, platinum: 0 };
+    for (const row of tierResult.rows) {
+      const t = row.membership_tier || 'free';
+      if (t in tierDistribution) tierDistribution[t] = parseInt(row.count, 10);
+    }
     return res.json({
       prakritiDistribution,
+      tierDistribution,
+      pendingAssessments: parseInt(pendingResult.rows[0].count, 10),
+      approvedAssessments: parseInt(approvedResult.rows[0].count, 10),
       dailyTests: dailyTestsResult.rows.map(r => ({ day: r.day, count: parseInt(r.count, 10) })),
       userActivity: userActivityResult.rows.map(r => ({ day: r.day, count: parseInt(r.count, 10) })),
     });

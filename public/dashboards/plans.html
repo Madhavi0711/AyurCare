@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -49,7 +49,7 @@
     .tier-features li.locked::before { content: "?"; color: #ddd; }
     .tier-btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 0.95rem; font-family: Georgia,serif; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s ease; }
     .tier-btn.current { background: #f0e8dc; color: #7a6a55; cursor: default; }
-    .tier-btn.upgrade-gold { background: #c8a96e; color: #3b2a1a; }
+    .tier-btn.upgrade-gold { background: #c8a96e; color: #3b2a1a; border: 2px solid #b8994e; }
     .tier-btn.upgrade-gold:hover { background: #b8994e; }
     .tier-btn.upgrade-platinum { background: #8b6abf; color: #fff; }
     .tier-btn.upgrade-platinum:hover { background: #7a5aae; }
@@ -151,7 +151,7 @@
       <div class="tier-card" id="card-free">
         <span class="tier-badge free">Free</span>
         <h3 class="tier-name">Free</h3>
-        <div class="tier-price">?0</div>
+        <div class="tier-price">Rs.0</div>
         <p class="tier-desc">Get started with your Ayurvedic journey at no cost.</p>
         <ul class="tier-features">
           <li>Prakriti assessment</li>
@@ -167,7 +167,7 @@
       <div class="tier-card gold" id="card-gold">
         <span class="tier-badge gold">Gold</span>
         <h3 class="tier-name">Gold</h3>
-        <div class="tier-price">?499<span>/month</span></div>
+        <div class="tier-price">Rs.999<span>/month</span></div>
         <p class="tier-desc">Unlock personalised diet and yoga plans tailored to your Prakriti.</p>
         <ul class="tier-features">
           <li>Prakriti assessment &amp; result</li>
@@ -175,15 +175,15 @@
           <li>Yoga plans &amp; sessions</li>
           <li class="locked">Premium content</li>
         </ul>
-        <a href="/dashboards/payment.html?tier=gold" class="tier-btn upgrade-gold" style="text-decoration:none;display:block;text-align:center;" id="btn-gold">Upgrade to Gold</a>
+        <a href="/dashboards/payment.html?tier=gold" class="tier-btn upgrade-gold" style="text-decoration:none;display:block;text-align:center;border:2px solid #b8994e;box-sizing:border-box;" id="btn-gold">Upgrade to Gold</a>
       </div>
 
       <!-- Platinum -->
       <div class="tier-card platinum" id="card-platinum">
         <span class="tier-badge platinum">Platinum</span>
         <h3 class="tier-name">Platinum</h3>
-        <div class="tier-price">?999<span>/month</span></div>
-        <p class="tier-desc">Full access to everything — diet, yoga, and exclusive premium content.</p>
+        <div class="tier-price">Rs.2999<span>/month</span></div>
+        <p class="tier-desc">Full access to everything  diet, yoga, and exclusive premium content.</p>
         <ul class="tier-features">
           <li>Prakriti assessment &amp; result</li>
           <li>Personalised diet plan</li>

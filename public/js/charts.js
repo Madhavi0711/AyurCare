@@ -26,27 +26,34 @@ var AyurCharts = (function () {
     var ctx = document.getElementById(canvasId);
     if (!ctx) return;
 
+    var vata  = data.vata  || 0;
+    var pitta = data.pitta || 0;
+    var kapha = data.kapha || 0;
+
     instances[canvasId] = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'bar',
       data: {
         labels: ['Vata', 'Pitta', 'Kapha'],
         datasets: [{
-          data: [data.vata || 0, data.pitta || 0, data.kapha || 0],
-          backgroundColor: ['#d1ecf1', '#fde8d8', '#e2d9f3'],
+          label: 'Assessments',
+          data: [vata, pitta, kapha],
+          backgroundColor: ['#4db6c8', '#e07040', '#8b6abf'],
           borderColor: ['#0c5460', '#7a3a00', '#3d1a78'],
-          borderWidth: 1,
+          borderWidth: 2,
+          borderRadius: 6,
         }],
       },
       options: {
         responsive: true,
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } },
+        },
         plugins: {
-          legend: { position: 'bottom' },
+          legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function (context) {
-                var total = context.dataset.data.reduce(function (a, b) { return a + b; }, 0);
-                var pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
-                return context.label + ': ' + context.parsed + ' (' + pct + '%)';
+              label: function(context) {
+                return context.label + ': ' + context.parsed.y + ' users';
               },
             },
           },

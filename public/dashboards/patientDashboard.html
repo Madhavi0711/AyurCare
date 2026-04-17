@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Wellness Dashboard — AYURCARE</title>
+  <title>My Wellness Dashboard  AYURCARE</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/wellness.css" />
   <script src="../js/client-init.js"></script>
@@ -51,7 +51,7 @@
 </head>
 <body>
 
-  <!-- ── Navbar ─────────────────────────────────────────────────────────── -->
+  <!-- -- Navbar ----------------------------------------------------------- -->
   <header class="wl-navbar">
     <div class="wl-navbar-inner">
       <a href="/dashboards/patientDashboard.html" class="wl-logo">
@@ -71,9 +71,7 @@
         <span class="wl-user-greeting">Hello, <strong id="nav-user-name"></strong></span>
         <div style="display:flex;align-items:center;gap:6px;">
           <!-- Bell button -->
-          <button id="notif-bell-btn" aria-label="Notifications" title="Notifications" style="position:relative;background:none;border:none;cursor:pointer;padding:6px 8px;color:#FFFDF1;font-size:1.25rem;line-height:1;display:flex;align-items:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='none'">
-            🔔
-            <span id="notif-bell-dot" style="display:none;position:absolute;top:3px;right:3px;width:9px;height:9px;background:#FF9644;border-radius:50%;border:2px solid #562F00;"></span>
+          <button id="notif-bell-btn" aria-label="Notifications" title="Notifications" style="position:relative;background:none;border:none;cursor:pointer;padding:6px 8px;color:#FFFDF1;font-size:1.25rem;line-height:1;display:flex;align-items:center;border-radius:50%;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='none'">&#128276;<span id="notif-bell-dot" style="display:none;position:absolute;top:3px;right:3px;width:9px;height:9px;background:#FF9644;border-radius:50%;border:2px solid #562F00;"></span>
           </button>
           <!-- Avatar + dropdown -->
           <div class="wl-nav-dropdown">
@@ -83,23 +81,17 @@
             <div class="wl-dropdown-menu" id="avatar-dropdown" hidden>
               <div class="wl-dropdown-stats">
                 <div class="wl-dropdown-stat-row">
-                  <span class="wl-dropdown-stat-icon">🌿</span>
-                  <div>
-                    <span class="wl-dropdown-stat-label">Prakriti Type</span>
+                  <span class="wl-dropdown-stat-icon">&#127807;</span><div><span class="wl-dropdown-stat-label">Prakriti Type</span>
                     <span class="wl-dropdown-stat-value" id="stat-prakriti">Not assessed</span>
                   </div>
                 </div>
                 <div class="wl-dropdown-stat-row">
-                  <span class="wl-dropdown-stat-icon">📋</span>
-                  <div>
-                    <span class="wl-dropdown-stat-label">Active Plans</span>
+                  <span class="wl-dropdown-stat-icon">&#128203;</span><div><span class="wl-dropdown-stat-label">Active Plans</span>
                     <span class="wl-dropdown-stat-value" id="stat-plans">0 Active Plans</span>
                   </div>
                 </div>
                 <div class="wl-dropdown-stat-row">
-                  <span class="wl-dropdown-stat-icon">⭐</span>
-                  <div>
-                    <span class="wl-dropdown-stat-label">Membership</span>
+                  <span class="wl-dropdown-stat-icon">&#11088;</span><div><span class="wl-dropdown-stat-label">Membership</span>
                     <span class="wl-dropdown-stat-value" id="stat-membership">Free Plan</span>
                   </div>
                 </div>
@@ -120,7 +112,7 @@
     </div>
   </header>
 
-  <!-- ── Mobile Drawer ──────────────────────────────────────────────── -->
+  <!-- -- Mobile Drawer ------------------------------------------------ -->
   <div class="wl-mobile-drawer" id="mobile-drawer" hidden>
     <div class="wl-drawer-header">
       <a href="/dashboards/patientDashboard.html" class="wl-logo">
@@ -147,7 +139,7 @@
   </div>
   <div class="wl-drawer-overlay" id="drawer-overlay" hidden></div>
 
-  <!-- ── Hero Section ───────────────────────────────────────────────── -->
+  <!-- -- Hero Section ------------------------------------------------- -->
   <section class="wl-hero" id="hero-section">
     <div class="wl-hero-overlay"></div>
     <div class="wl-hero-content">
@@ -168,10 +160,10 @@
     </div>
   </section>
 
-  <!-- ── Main Content ───────────────────────────────────────────────── -->
+  <!-- -- Main Content ------------------------------------------------- -->
   <div class="wl-main" id="wl-main">
 
-    <!-- ── Prakriti Section ──────────────────────────────────────────── -->
+    <!-- -- Prakriti Section -------------------------------------------- -->
     <section class="wl-section" id="prakriti-section">
       <div class="wl-section-inner wl-prakriti-inner">
         <div class="wl-prakriti-content">
@@ -179,9 +171,9 @@
           <h2 class="wl-section-title" style="text-align:left;">Know Your Prakriti</h2>
           <p class="wl-prakriti-desc">Your body constitution helps us recommend the most suitable treatments, diet, and lifestyle practices for you.</p>
           <div class="wl-dosha-tags">
-            <span class="wl-dosha-tag vata">Vata — Air &amp; Space</span>
-            <span class="wl-dosha-tag pitta">Pitta — Fire &amp; Water</span>
-            <span class="wl-dosha-tag kapha">Kapha — Earth &amp; Water</span>
+            <span class="wl-dosha-tag vata">Vata Air &amp; Space</span>
+            <span class="wl-dosha-tag pitta">Pitta Fire &amp; Water</span>
+            <span class="wl-dosha-tag kapha">Kapha Earth &amp; Water</span>
           </div>
           <div id="prakriti-status-area">
             <p id="prakriti-status-text" class="wl-loading-text">Loading your Prakriti status...</p>
@@ -192,7 +184,7 @@
       </div>
     </section>
 
-    <!-- ── Services Section ──────────────────────────────────────────── -->
+    <!-- -- Services Section -------------------------------------------- -->
     <section class="wl-section wl-services-section" id="services-section">
       <div class="wl-section-inner">
         <div class="wl-section-header">
@@ -210,7 +202,7 @@
         <div id="tab-treatments" class="wl-tab-panel">
           <div class="wl-services-grid" id="treatments-grid">
             <div class="wl-service-card">
-              <div class="wl-service-img-bg" style="background-image:url('/images/Panchakarma.jpg');"></div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/jointpain.jpeg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Joint pain relief yog</span>
                 <h3 class="wl-service-title">Mobility &amp; stengthning Therapy</h3>
@@ -258,7 +250,7 @@
         <div id="tab-yoga" class="wl-tab-panel" hidden>
           <div class="wl-services-grid" id="yoga-grid">
             <div class="wl-service-card">
-              <div class="wl-service-img-bg" style="background-image:url('/images/yoga-bg.webp');"></div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/yogaplan.jpeg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Beginner</span>
                 <h3 class="wl-service-title">Beginner Yoga Plan</h3>
@@ -271,7 +263,7 @@
               </div>
             </div>
             <div class="wl-service-card">
-              <div class="wl-service-img-bg" style="background-image:url('/images/wellness-bg.avif');"></div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/weightreduction.jpg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Weight Management</span>
                 <h3 class="wl-service-title">Weight Balance Yoga</h3>
@@ -284,7 +276,7 @@
               </div>
             </div>
             <div class="wl-service-card">
-              <div class="wl-service-img-bg" style="background-image:url('/images/ayur-bg.avif');"></div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/wellness-bg.avif');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Mindfulness</span>
                 <h3 class="wl-service-title">Mindfulness &amp; Meditation</h3>
@@ -306,15 +298,15 @@
         <div id="tab-content" class="wl-tab-panel" hidden>
           <div class="wl-services-grid" id="content-grid-tab">
             <div class="wl-service-card">
-              <div class="wl-service-img-bg wl-service-img-icon">&#129367;</div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/diet.jpeg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Diet</span>
                 <h3 class="wl-service-title">Personalised Diet Plans</h3>
-                <p class="wl-service-desc">Custom Ayurvedic diet recommendations based on your Prakriti type — foods to favour, foods to avoid, and seasonal guidelines.</p>
+                <p class="wl-service-desc">Custom Ayurvedic diet recommendations based on your Prakriti type  foods to favour, foods to avoid, and seasonal guidelines.</p>
               </div>
             </div>
             <div class="wl-service-card">
-              <div class="wl-service-img-bg wl-service-img-icon">&#128218;</div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/notes.jpeg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Guides</span>
                 <h3 class="wl-service-title">Exclusive Wellness Guides</h3>
@@ -322,7 +314,7 @@
               </div>
             </div>
             <div class="wl-service-card">
-              <div class="wl-service-img-bg wl-service-img-icon">&#127909;</div>
+              <div class="wl-service-img-bg" style="background-image:url('/images/video.jpeg');"></div>
               <div class="wl-service-body">
                 <span class="wl-service-category">Video</span>
                 <h3 class="wl-service-title">Video Consultations</h3>
@@ -338,7 +330,7 @@
       </div>
     </section>
 
-    <!-- ── Profile & Settings Section ────────────────────────────────── -->
+    <!-- -- Profile & Settings Section ---------------------------------- -->
     <section class="wl-section" id="account" hidden>
       <div class="wl-section-header">
         <h2 class="wl-section-title">Profile &amp; Settings</h2>
@@ -368,7 +360,7 @@
       </div>
     </section>
 
-    <!-- ── Notifications Section ─────────────────────────────────────── -->
+    <!-- -- Notifications Section --------------------------------------- -->
     <section class="wl-section" id="notifications" hidden>
       <div class="wl-section-header">
         <h2 class="wl-section-title">Notifications</h2>
@@ -382,7 +374,7 @@
 
   </div><!-- /.wl-main -->
 
-  <!-- ── Footer ─────────────────────────────────────────────────────── -->
+  <!-- -- Footer ------------------------------------------------------- -->
   <footer class="wl-footer">
     <div class="wl-footer-inner">
       <div class="wl-footer-brand">
@@ -395,7 +387,7 @@
       <div class="wl-footer-contact">
         <p class="wl-footer-contact-title">Need help choosing the right treatment?</p>
         <p class="wl-footer-contact-num">Call us at <strong>+91 98765 43210</strong></p>
-        <p class="wl-footer-contact-note">Mon–Sat, 9 AM – 6 PM</p>
+        <p class="wl-footer-contact-note">Mon to Sat, 9 AM - 6 PM</p>
       </div>
     </div>
     <div class="wl-footer-bottom">
@@ -403,10 +395,10 @@
     </div>
   </footer>
 
-  <!-- ── Notification Panel (slide-in) ─────────────────────────────── -->
+  <!-- -- Notification Panel (slide-in) ------------------------------- -->
   <div id="notif-panel" style="display:none;position:fixed;top:0;right:0;width:360px;max-width:100vw;height:100vh;background:#FFFDF1;box-shadow:-4px 0 24px rgba(86,47,0,0.18);z-index:900;flex-direction:column;overflow:hidden;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid #FFCE99;background:#562F00;">
-      <h3 style="color:#FFFDF1;font-family:Georgia,serif;margin:0;font-size:1.05rem;">🔔 Notifications</h3>
+      <h3 style="color:#FFFDF1;font-family:Georgia,serif;margin:0;font-size:1.05rem;">?? Notifications</h3>
       <button id="notif-panel-close" style="background:none;border:none;color:#FFFDF1;font-size:1.4rem;cursor:pointer;line-height:1;padding:4px 8px;">&times;</button>
     </div>
     <div id="notif-panel-list" style="flex:1;overflow-y:auto;padding:12px 0;">
@@ -418,7 +410,7 @@
   </div>
   <div id="notif-panel-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:899;"></div>
 
-  <!-- ── Welcome Modal ──────────────────────────────────────────────── -->
+  <!-- -- Welcome Modal ------------------------------------------------ -->
   <div id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;">
     <div id="welcome-modal-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,0.5);"></div>
     <div id="welcome-modal-box" style="position:relative;z-index:1;background:#fff;border-radius:16px;padding:40px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(90,62,40,0.18);">
@@ -456,7 +448,7 @@
         var navName = document.getElementById('nav-user-name');
         if (navName) navName.textContent = d.name || '';
         if (heroNameEl) {
-          var tierLabels = { free: '', gold: ' · Gold Member ⭐', platinum: ' · Platinum Member 💎' };
+          var tierLabels = { free: '', gold: '  Gold Member ?', platinum: '  Platinum Member ??' };
           var tier = d.membership_tier || 'free';
           heroNameEl.textContent = 'Welcome, ' + (d.name || 'there') + '!' + (tierLabels[tier] || '');
         }
@@ -472,7 +464,7 @@
   </script>
 
   <script>
-    // ── Notification Panel ──────────────────────────────────────────
+    // -- Notification Panel ------------------------------------------
     (function () {
       var bellBtn      = document.getElementById('notif-bell-btn');
       var bellDot      = document.getElementById('notif-bell-dot');
@@ -512,7 +504,7 @@
             panelList.innerHTML = notifs.map(function(n) {
               return '<div data-id="' + n.id + '" class="notif-item" style="padding:14px 18px;border-bottom:1px solid #FFCE99;cursor:pointer;background:' + (n.is_read ? '#FFFDF1' : '#FFF5E6') + ';">' +
                 '<div style="display:flex;align-items:flex-start;gap:10px;">' +
-                  '<span style="font-size:1rem;flex-shrink:0;">' + (n.is_read ? '📭' : '🔔') + '</span>' +
+                  '<span style="font-size:1rem;flex-shrink:0;">' + (n.is_read ? '??' : '??') + '</span>' +
                   '<div style="flex:1;">' +
                     '<p style="margin:0 0 4px;font-size:0.88rem;color:#562F00;line-height:1.5;">' + String(n.message||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p>' +
                     '<time style="font-size:0.75rem;color:#8B5E3C;">' + fmtDate(n.created_at) + '</time>' +

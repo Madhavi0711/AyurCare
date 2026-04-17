@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analytics — AYURCARE</title>
+  <title>Analytics  AYURCARE</title>
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -54,23 +54,21 @@
       <!-- Stat cards -->
       <div class="summary-cards" style="margin-bottom:32px;">
         <div class="summary-card">
-          <h3>Total Clients</h3>
-          <p class="summary-value" id="stat-total">—</p>
-          <p class="summary-label">All registered users</p>
+          <h3>Pending Assessments</h3><p class="summary-value" id="stat-total"></p><p class="summary-label">Awaiting admin review</p>
         </div>
         <div class="summary-card">
           <h3>Gold Members</h3>
-          <p class="summary-value" id="stat-gold">—</p>
+          <p class="summary-value" id="stat-gold"></p>
           <p class="summary-label">Gold tier subscribers</p>
         </div>
         <div class="summary-card">
           <h3>Platinum Members</h3>
-          <p class="summary-value" id="stat-platinum">—</p>
+          <p class="summary-value" id="stat-platinum"></p>
           <p class="summary-label">Platinum tier subscribers</p>
         </div>
         <div class="summary-card">
           <h3>Approved Assessments</h3>
-          <p class="summary-value" id="stat-approved">—</p>
+          <p class="summary-value" id="stat-approved"></p>
           <p class="summary-label">Prakriti results approved</p>
         </div>
       </div>
@@ -195,7 +193,7 @@
     }
 
     function formatDate(iso) {
-      if (!iso) return '—';
+      if (!iso) return '';
       try { return new Date(iso).toLocaleDateString(); } catch(e) { return iso; }
     }
 
@@ -216,16 +214,16 @@
       countEl.textContent = '(' + rows.length + ' record' + (rows.length !== 1 ? 's' : '') + ')';
       tbody.innerHTML = rows.map(function(r) {
         var typeClass = r.dominant_type ? r.dominant_type.toLowerCase() : '';
-        var diet = r.diet_summary ? esc(r.diet_summary.substring(0, 80)) + (r.diet_summary.length > 80 ? '' : '') : '—';
+        var diet = r.diet_summary ? esc(r.diet_summary.substring(0, 80)) + (r.diet_summary.length > 80 ? '' : '') : '';
         return '<tr>' +
           '<td>' + esc(r.client_name) + '</td>' +
           '<td style="font-size:0.82rem;">' + esc(r.client_email) + '</td>' +
-          '<td><span class="badge badge-' + typeClass + '">' + esc(r.dominant_type || '—') + '</span></td>' +
-          '<td><span class="badge badge-' + esc(r.prakriti_status || '') + '">' + esc(r.prakriti_status || '—') + '</span></td>' +
+          '<td><span class="badge badge-' + typeClass + '">' + esc(r.dominant_type || '') + '</span></td>' +
+          '<td><span class="badge badge-' + esc(r.prakriti_status || '') + '">' + esc(r.prakriti_status || '') + '</span></td>' +
           '<td>' + formatDate(r.assessment_date) + '</td>' +
           '<td style="font-size:0.82rem;max-width:160px;">' + diet + '</td>' +
           '<td style="text-align:center;">' + (r.yoga_assignment_count || 0) + '</td>' +
-          '<td>' + esc(r.subscription_plan || '—') + '</td>' +
+          '<td>' + esc(r.subscription_plan || '') + '</td>' +
           '</tr>';
       }).join('');
     }
@@ -256,6 +254,7 @@
     });
     // Auto-load reports on page open
     (function() {
+      var hint = document.getElementById('table-hint'); if (hint) hint.style.display = 'none';
       fetch('/api/admin/reports', { credentials: 'include' })
         .then(function(r) { return r.ok ? r.json() : []; })
         .then(function(data) { renderTable(data); })
@@ -264,31 +263,48 @@
   </script>
   <script src="../js/charts.js"></script>
   <script>
-    (function() {
+    function loadAnalytics() {
       fetch('/api/admin/analytics', { credentials: 'include' })
-        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(r) {
+          if (r.status === 401 || r.status === 403) { window.location.href = '/login.html'; return null; }
+          if (!r.ok) return r.json().then(function(b) { throw new Error(b.error || 'HTTP ' + r.status); });
+          return r.json();
+        })
         .then(function(data) {
           if (!data) return;
           var dist = data.prakritiDistribution || {};
           var tier = data.tierDistribution || {};
-          var total = (tier.free || 0) + (tier.gold || 0) + (tier.platinum || 0);
-          var approved = (dist.vata || 0) + (dist.pitta || 0) + (dist.kapha || 0);
-
-          document.getElementById('stat-total').textContent = total;
+          var approved = data.approvedAssessments || 0;
+          document.getElementById('stat-total').textContent = data.pendingAssessments || 0;
           document.getElementById('stat-gold').textContent = tier.gold || 0;
           document.getElementById('stat-platinum').textContent = tier.platinum || 0;
           document.getElementById('stat-approved').textContent = approved;
-
-          AyurCharts.renderPrakritiPie('prakriti-pie-chart', dist);
+          var errEl = document.getElementById('charts-error');
+          if (errEl) errEl.hidden = true;
+          // Fetch prakriti distribution directly for accuracy
+          fetch('/api/admin/prakriti/all', { credentials: 'include' })
+            .then(function(r) { return r.ok ? r.json() : []; })
+            .then(function(results) {
+              var counts = { vata: 0, pitta: 0, kapha: 0 };
+              results.forEach(function(r) {
+                var t = (r.dominant_type || '').toLowerCase();
+                if (t in counts) counts[t]++;
+              });
+              AyurCharts.renderPrakritiPie('prakriti-pie-chart', counts);
+            })
+            .catch(function() { AyurCharts.renderPrakritiPie('prakriti-pie-chart', dist); });
           AyurCharts.renderTierDistribution('tier-chart', tier);
           AyurCharts.renderDailyTests('daily-tests-chart', data.dailyTests || []);
           AyurCharts.renderUserActivity('user-activity-chart', data.userActivity || []);
         })
-        .catch(function() {
+        .catch(function(err) {
           var el = document.getElementById('charts-error');
-          el.textContent = 'Failed to load analytics data.'; el.hidden = false;
+          if (el) { el.textContent = 'Analytics error: ' + (err.message || 'check console'); el.hidden = false; }
+          console.error('Analytics load error:', err);
         });
-    }());
+    }
+    loadAnalytics();
+    setInterval(loadAnalytics, 30000);
   </script>
 </body>
 </html>
